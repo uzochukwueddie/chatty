@@ -6,6 +6,8 @@ import { Utils } from '@services/utils/utils.service';
 import { authService } from '@services/api/auth/auth.service';
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '@hooks/useLocalStorage';
+import useSessionStorage from '@hooks/useSessionStorage';
+import { useDispatch } from 'react-redux';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -18,7 +20,9 @@ const Register = () => {
   const [user, setUser] = useState();
   const [setStoredUsername] = useLocalStorage('username', 'set');
   const [setLoggedIn] = useLocalStorage('keepLoggedIn', 'set');
+  const [pageReload] = useSessionStorage('pageReload', 'set');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const registerUser = async (event) => {
     setLoading(true);
@@ -33,13 +37,10 @@ const Register = () => {
         avatarColor,
         avatarImage
       });
-
-      // 3 - dispatch user to redux
       setLoggedIn(true);
       setStoredUsername(username);
-      setUser(result.data.user);
-      setHasError(false);
       setAlertType('alert-success');
+      Utils.dispatchUser(result, pageReload, dispatch, setUser);
     } catch (error) {
       setLoading(false);
       setHasError(true);
