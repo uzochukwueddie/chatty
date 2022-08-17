@@ -1,3 +1,4 @@
+import { addUser, clearUser } from '@redux/reducers/user/user.reducer';
 import { avatarColors } from '@services/utils/static.data';
 import { floor, random } from 'lodash';
 
@@ -24,5 +25,19 @@ export class Utils {
     context.fillText(text, canvas.width / 2, canvas.height / 2);
 
     return canvas.toDataURL('image/png');
+  }
+
+  static dispatchUser(result, pageReload, dispatch, setUser) {
+    pageReload(true);
+    dispatch(addUser({ token: result.data.token, profile: result.data.user }));
+    setUser(result.data.user);
+  }
+
+  static clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn }) {
+    dispatch(clearUser());
+    // dispatch clear notification action
+    deleteStorageUsername();
+    deleteSessionPageReload();
+    setLoggedIn(false);
   }
 }
