@@ -1,13 +1,13 @@
-import blessed from '../../assets/feelings/blessed.jpg';
-import excited from '../../assets/feelings/excited.jpg';
-import happy from '../../assets/feelings/happy.jpg';
-import loved from '../../assets/feelings/loved.jpg';
-import angry from '../../assets/reactions/angry.png';
-// import happy from '../../assets/reactions/happy.png';
-import like from '../../assets/reactions/like.png';
-import love from '../../assets/reactions/love.png';
-import sad from '../../assets/reactions/sad.png';
-import wow from '../../assets/reactions/wow.png';
+import blessed from '@assets/feelings/blessed.jpg';
+import excited from '@assets/feelings/excited.jpg';
+import happy from '@assets/feelings/happy.jpg';
+import loved from '@assets/feelings/loved.jpg';
+import angry from '@assets/reactions/angry.png';
+import happyReaction from '@assets/reactions/happy.png';
+import like from '@assets/reactions/like.png';
+import love from '@assets/reactions/love.png';
+import sad from '@assets/reactions/sad.png';
+import wow from '@assets/reactions/wow.png';
 import {
   FaBirthdayCake,
   FaComments,
@@ -197,7 +197,7 @@ export const reactionsMap = {
   love,
   wow,
   sad,
-  happy,
+  happyReaction,
   angry
 };
 
