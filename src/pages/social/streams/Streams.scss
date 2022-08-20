@@ -1,0 +1,32 @@
+.streams {
+  margin-top: 30px;
+  max-width: 1152px;
+  margin: auto;
+  height: 100vh;
+
+  &-content {
+    display: grid;
+    grid-template-areas: "post suggestions";
+    grid-template-columns: 1fr 330px;
+    grid-template-rows: 1fr;
+    column-gap: 20px;
+    margin-top: 20px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    .streams-post {
+      grid-area: post;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      height: 100vh;
+      scroll-behavior: smooth;
+    }
+
+    .streams-suggestions {
+      grid-area: suggestions;
+      background-color: var(--white-1);
+      max-height: 600px;
+      border-radius: 16px;
+    }
+  }
+}

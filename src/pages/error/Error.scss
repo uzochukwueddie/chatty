@@ -1,0 +1,30 @@
+.error-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .oops {
+    font-weight: 700;
+    color: var(--primary-1);
+    font-size: 10rem;
+    text-transform: uppercase;
+  }
+
+  .not-found {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-1);
+  }
+
+  .back-button {
+    color: var(--white-1);
+    background-color: var(--primary-1);
+    border-color: var(--primary-1);
+    display: block;
+    margin-top: 40px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
