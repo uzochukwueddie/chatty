@@ -1,4 +1,5 @@
 import Skeleton from 'react-loading-skeleton';
+import '@components/suggestions/Suggestions.scss';
 
 const SuggestionsSkeletons = () => {
   return (
