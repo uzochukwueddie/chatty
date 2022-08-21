@@ -1,0 +1,97 @@
+.notifications-container {
+  overflow-y: scroll;
+  height: 100vh;
+  max-width: 1152px;
+  margin: auto;
+
+  .notifications-box {
+    padding: 15px 24px 24px;
+    margin-bottom: 100px;
+    margin-top: 30px;
+    justify-items: center;
+    background-color: var(--white-1);
+    border-radius: 16px;
+
+    .notification-box {
+      margin: auto;
+      max-width: 1152px;
+      background: var(--white-1);
+      border-radius: 5px;
+      transition: all 0.3s;
+      position: relative;
+      z-index: 2;
+      height: 70px;
+      margin-top: 20px;
+      cursor: pointer;
+      box-shadow: rgb(145 158 171 / 20%) 0 0 2px 0, rgb(145 158 171 / 12%) 0 12px 24px -4px;
+
+      &-sub-card {
+        font-size: inherit;
+        color: inherit;
+        border-bottom: 1px solid var(--white-7);
+        display: inline-block;
+        width: 100%;
+        height: 70px;
+
+        &-media {
+          display: grid;
+          grid-template-areas: "image content";
+          grid-template-columns: max-content 1fr;
+          grid-template-rows: 1fr;
+          align-items: center;
+          padding: 5px 15px;
+          height: inherit;
+
+          &-image-icon {
+            grid-area: image;
+            margin: auto;
+          }
+
+          &-body {
+            grid-area: content;
+            margin-left: 1rem;
+            padding-top: 5px;
+
+            .title {
+              font-size: 14px;
+              line-height: 21px;
+              height: 21px;
+              margin-bottom: 2px;
+              color: var(--black-4);
+            }
+
+            .subtitle {
+              font-size: 12px;
+              float: right;
+              color: var(--gray-9);
+              cursor: pointer;
+
+              .icon {
+                color: var(--primary-1);
+              }
+
+              .trash {
+                color: var(--red-1);
+                font-size: 12px;
+              }
+            }
+
+            .subtext {
+              font-size: 14px;
+              color: var(--gray-9);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .no-notification {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    color: var(--gray-9);
+  }
+}
