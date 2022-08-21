@@ -4,6 +4,7 @@ import ProtectedRoute from '@pages/ProtectedRoute';
 import { useRoutes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import StreamsSkeleton from '@pages/social/streams/StreamsSkeleton';
+import NotificationSkeleton from '@pages/social/notifications/NotificationSkeleton';
 
 const Social = lazy(() => import('@pages/social/Social'));
 const Chat = lazy(() => import('@pages/social/chat/Chat'));
@@ -88,7 +89,7 @@ export const AppRouter = () => {
         {
           path: 'notifications',
           element: (
-            <Suspense>
+            <Suspense fallback={<NotificationSkeleton />}>
               <Notification />
             </Suspense>
           )
