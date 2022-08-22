@@ -1,0 +1,75 @@
+.giphy-container {
+  background-color: transparent;
+  border-radius: 6px;
+
+  &-picker {
+    display: grid;
+    grid-template-areas:
+      "form"
+      "list";
+    margin-top: 5px;
+
+    &-form {
+      grid-area: form;
+      display: grid;
+      position: relative;
+      margin: 0 10px;
+
+      .form-row .form-input {
+        line-height: 0;
+        padding: 0 40px;
+        padding-top: 2px;
+      }
+
+      &-input {
+        width: 100%;
+        padding-left: 40px;
+        height: 45px;
+        background: transparent;
+        border: 1px solid var(--white-4);
+        font-size: 14px;
+        color: var(--gray-8);
+        border-radius: 10px;
+        outline: medium none;
+        overflow: visible;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+        &::placeholder {
+          color: var(--gray-8);
+          font-weight: bold;
+        }
+      }
+
+      .search {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        color: var(--primary-1);
+        font-size: 16px;
+      }
+    }
+
+    &-list {
+      grid-area: list;
+      overflow: scroll;
+      height: 100vh;
+      list-style: none;
+
+      &-item {
+        padding-bottom: 15px;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-size: 0.8rem;
+      }
+
+      &-no-item {
+        color: var(--primary-1);
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+}
