@@ -1,0 +1,56 @@
+.feelings-container {
+  position: absolute;
+  bottom: 150px;
+  right: calc(50% - 240px);
+  box-shadow: 0 1px 15px 1px rgb(0 0 0 / 8%);
+  background-color: var(--white-1);
+  border-radius: 6px;
+  transition-duration: 200ms;
+  transition-delay: 0ms;
+  transform-style: flat;
+  transform-origin: 50% 50% 0;
+  transition: all 0.2s linear;
+
+  &-picker {
+    width: 300px;
+    height: 200px;
+
+    p {
+      color: var(--black-5);
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 10px 15px;
+      margin: 0;
+    }
+
+    hr {
+      margin: 0;
+      padding: 0;
+    }
+
+    &-list {
+      list-style: none;
+      padding: 10px 15px;
+      overflow-y: scroll;
+      height: calc(100% - 44px);
+      cursor: pointer;
+
+      &-item {
+        padding: 8px 0;
+        font-size: 0.8rem;
+        display: flex;
+
+        &:hover {
+          background-color: var(--white-14);
+        }
+
+        img {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+}

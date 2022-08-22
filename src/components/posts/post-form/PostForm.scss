@@ -1,0 +1,84 @@
+.post-form {
+  background: var(--white-1);
+  height: 240px;
+  border-radius: 16px;
+  padding: 0 8px;
+
+  &-header {
+    height: 60px;
+    border-bottom: 1px solid var(--white-4);
+
+    .post-form-title {
+      height: 60px;
+      line-height: 60px;
+      font-size: 19.6px;
+      font-weight: normal;
+      color: var(--gray-11);
+      padding-left: 10px;
+    }
+  }
+
+  &-body {
+    height: 164px;
+    padding: 15px 0;
+
+    hr {
+      border: 0;
+      border-top: 1px solid var(--white-4);
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    .post-form-input-body {
+      display: flex;
+      line-height: 25px;
+      height: 65px;
+      align-items: center;
+      padding: 0 15px;
+      cursor: pointer;
+
+      .post-form-input {
+        background: transparent;
+        font-size: 18px;
+        color: var(--gray-8);
+        padding: 0.375rem 0.75rem;
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        &:empty::before {
+          content: attr(data-placeholder);
+          color: var(--gray-1);
+        }
+      }
+    }
+
+    .post-form-list {
+      padding: 0;
+      margin: 0;
+      align-items: center;
+      display: flex;
+      list-style: none;
+
+      &-item {
+        display: flex;
+        color: var(--primary-1);
+        background: var(--white-7);
+        border-radius: 5px;
+        padding: 0.5rem;
+        margin-right: 1rem;
+        cursor: pointer;
+
+        img {
+          padding-right: 5px;
+        }
+      }
+
+      .image-select {
+        .file-input {
+          display: none;
+        }
+      }
+    }
+  }
+}
