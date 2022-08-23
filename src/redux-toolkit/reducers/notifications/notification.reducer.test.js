@@ -1,4 +1,4 @@
-import reducer, { addNotification, clearNotification } from '@redux/reducers/notification/notification.reducer';
+import reducer, { addNotification, clearNotification } from '@redux/reducers/notifications/notification.reducer';
 
 let initialState = [];
 

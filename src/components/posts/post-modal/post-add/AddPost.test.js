@@ -112,13 +112,4 @@ describe('AddPost', () => {
     const buttonElement = await screen.findByTestId('post-button');
     expect(buttonElement.childNodes.item(0)).toBeInTheDocument();
   });
-
-  it('should display modal loading', async () => {
-    render(<AddPost selectedImage="" />);
-    const buttonElement = await screen.findByTestId('post-button');
-    userEvent.click(buttonElement.childNodes.item(0));
-    const modalBoxLoading = await screen.findByTestId('modal-box-loading');
-    expect(modalBoxLoading).toBeInTheDocument();
-    expect(modalBoxLoading.textContent).toEqual('Posting...');
-  });
 });

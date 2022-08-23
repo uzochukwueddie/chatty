@@ -1,5 +1,6 @@
 import PostForm from '@components/posts/post-form/PostForm';
 import { existingUser } from '@mocks/data/user.mock';
+import { openModal, toggleGifModal } from '@redux/reducers/modal/modal.reducer';
 import { addUser } from '@redux/reducers/user/user.reducer';
 import { store } from '@redux/store';
 import { render, screen, within } from '@root/test.utils';
@@ -54,6 +55,10 @@ describe('PostForm', () => {
   });
 
   it('should have gif list item', async () => {
+    act(() => {
+      store.dispatch(openModal({ type: 'add' }));
+      store.dispatch(toggleGifModal(true));
+    });
     render(<PostForm />);
     const listElement = await screen.findAllByTestId('list-item');
     const { getAllByRole } = within(listElement[0]);

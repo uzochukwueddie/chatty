@@ -1,5 +1,5 @@
 import Suggestions from '@components/suggestions/Suggestions';
-import { addToSuggestions } from '@redux/reducers/user/suggestions.reducer';
+import { addToSuggestions } from '@redux/reducers/suggestions/suggestions.reducer';
 import { store } from '@redux/store';
 import { render, screen, waitFor } from '@root/test.utils';
 import userEvent from '@testing-library/user-event';

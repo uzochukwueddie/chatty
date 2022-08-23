@@ -21,7 +21,7 @@ describe('Giphy', () => {
   });
 
   it('should call search input', async () => {
-    jest.spyOn(GiphyUtils, 'searchGif');
+    jest.spyOn(GiphyUtils, 'searchGifs');
     render(<Giphy />);
     const inputElement = screen.getByPlaceholderText('Search Gif');
     fireEvent.change(inputElement, { target: { value: 'dog' } });
@@ -29,10 +29,11 @@ describe('Giphy', () => {
     expect(listItemElements.length).toEqual(1);
     const imgElement = screen.getByRole('img');
     expect(imgElement).toHaveAttribute('src', url);
-    expect(GiphyUtils.searchGif).toHaveBeenCalledTimes(1);
+    expect(GiphyUtils.searchGifs).toHaveBeenCalledTimes(1);
   });
 
   it('should return empty search result', async () => {
+    jest.spyOn(GiphyUtils, 'getTrendingGifs').mockReturnValue([]);
     server.use(emptySearchGiphyMock);
     render(<Giphy />);
     const inputElement = screen.getByPlaceholderText('Search Gif');
