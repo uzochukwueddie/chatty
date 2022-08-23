@@ -1,0 +1,71 @@
+.modal-comments {
+  align-self: center;
+  justify-self: center;
+  position: absolute;
+  width: 500px;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 1;
+  min-height: 600px;
+  border-radius: 8px;
+  pointer-events: all;
+  background-color: var(--white-1);
+  flex-direction: column;
+
+  &-header {
+    h2 {
+      text-align: center;
+      color: var(--black-5);
+      font-size: 1.25rem;
+      text-overflow: ellipsis;
+      font-weight: 700;
+      max-width: 100%;
+    }
+  }
+
+  &-container {
+    margin: 10px;
+    max-height: 500px;
+    overflow-y: scroll;
+
+    &-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      &-item {
+        margin-bottom: 1rem;
+        padding: 5px 10px;
+
+        &-display {
+          display: grid;
+          grid-template-areas: "img comment";
+          grid-template-columns: 50px 1fr;
+          grid-template-rows: 1fr;
+
+          &-block {
+            grid-area: comment;
+
+            .comment-data {
+              background: var(--white-10);
+              padding: 8px 15px;
+              border-radius: 20px;
+
+              h1 {
+                font-size: 16px;
+                color: var(--black-5);
+                font-weight: bold;
+                word-wrap: break-word;
+              }
+
+              p {
+                margin-bottom: 0;
+                font-size: 15px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

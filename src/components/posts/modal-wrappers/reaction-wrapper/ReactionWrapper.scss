@@ -1,0 +1,64 @@
+.modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1050;
+  display: grid;
+  grid-template-columns: 1;
+  grid-auto-rows: 1fr;
+  grid-template-areas: "modal";
+
+  .modal-bg {
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    background: var(--white-11);
+    opacity: 0.6;
+  }
+
+  &-container {
+    grid-area: modal;
+    align-self: center;
+    justify-self: center;
+    position: absolute;
+    width: 500px;
+    overflow: hidden;
+    box-sizing: border-box;
+    z-index: 1;
+    min-height: 600px;
+    border-radius: 8px;
+    pointer-events: all;
+    background-color: var(--white-1);
+    flex-direction: column;
+
+    &-body {
+      height: 600px;
+      overflow: auto;
+      border: 1px solid transparent;
+    }
+
+    &-header {
+      display: grid;
+      grid-template-areas: ". button";
+      grid-template-columns: 1fr 36px;
+      grid-template-rows: 1fr;
+      height: 40px;
+      padding: 16px;
+    }
+
+    &-header button {
+      grid-area: button;
+      font-weight: 700;
+      color: var(--black-1);
+      height: 40px;
+      margin-top: -5px;
+      outline: none;
+      cursor: pointer;
+      background: 0 0;
+      border: 0;
+      text-align: right;
+      font-size: 1.5rem;
+    }
+  }
+}

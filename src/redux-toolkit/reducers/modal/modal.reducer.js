@@ -9,7 +9,7 @@ const initialState = {
   feelingsIsOpen: false,
   openFileDialog: false,
   gifModalIsOpen: false,
-  reactionModalIsOpen: false,
+  reactionsModalIsOpen: false,
   commentsModalIsOpen: false,
   deleteDialogIsOpen: false
 };
@@ -30,7 +30,7 @@ const modalSlice = createSlice({
       state.feeling = '';
       state.image = '';
       state.data = null;
-      state.feelingIsOpen = false;
+      state.feelingsIsOpen = false;
       state.gifModalIsOpen = false;
       state.reactionsModalIsOpen = false;
       state.commentsModalIsOpen = false;
@@ -45,7 +45,7 @@ const modalSlice = createSlice({
       state.openFileDialog = action.payload;
     },
     toggleFeelingModal: (state, action) => {
-      state.feelingIsOpen = action.payload;
+      state.feelingsIsOpen = action.payload;
     },
     toggleGifModal: (state, action) => {
       state.gifModalIsOpen = action.payload;

@@ -31,6 +31,16 @@ class PostService {
     return response;
   }
 
+  async getPostCommentsNames(postId) {
+    const response = await axios.get(`/post/commentsnames/${postId}`);
+    return response;
+  }
+
+  async getPostComments(postId) {
+    const response = await axios.get(`/post/comments/${postId}`);
+    return response;
+  }
+
   async addReaction(body) {
     const response = await axios.post('/post/reaction', body);
     return response;
@@ -40,6 +50,11 @@ class PostService {
     const response = await axios.delete(
       `/post/reaction/${postId}/${previousReaction}/${JSON.stringify(postReactions)}`
     );
+    return response;
+  }
+
+  async addComment(body) {
+    const response = await axios.post('/post/comment', body);
     return response;
   }
 }

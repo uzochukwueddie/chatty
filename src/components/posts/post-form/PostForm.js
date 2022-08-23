@@ -12,7 +12,7 @@ import { ImageUtils } from '@services/utils/image-utils.service';
 
 const PostForm = () => {
   const { profile } = useSelector((state) => state.user);
-  const { type, isOpen, openFileDialog, gifModalIsOpen, feelingIsOpen } = useSelector((state) => state.modal);
+  const { type, isOpen, openFileDialog, gifModalIsOpen, feelingsIsOpen } = useSelector((state) => state.modal);
   const [selectedPostImage, setSelectedPostImage] = useState();
   const fileInputRef = useRef();
   const dispatch = useDispatch();
@@ -34,7 +34,7 @@ const PostForm = () => {
 
   const openFeelingsComponent = () => {
     dispatch(openModal({ type: 'add' }));
-    dispatch(toggleFeelingModal(!feelingIsOpen));
+    dispatch(toggleFeelingModal(!feelingsIsOpen));
   };
 
   const handleFileChange = (event) => {

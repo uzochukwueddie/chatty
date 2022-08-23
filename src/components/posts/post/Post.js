@@ -6,8 +6,17 @@ import { find } from 'lodash';
 import { feelingsList, privacyList } from '@services/utils/static.data';
 import '@components/posts/post/Post.scss';
 import PostCommentSection from '@components/posts/post-comment-section/PostCommentSection';
+import { useSelector } from 'react-redux';
+import ReactionsModal from '@components/posts/reactions/reactions-modal/ReactionsModal';
+import { Utils } from '@services/utils/utils.service';
+import useLocalStorage from '@hooks/useLocalStorage';
+import CommentInputBox from '@components/posts/comments/comment-input/CommentInputBox';
+import CommentsModal from '@components/posts/comments/comments-modal/CommentsModal';
 
 const Post = ({ post, showIcons }) => {
+  const { reactionsModalIsOpen, commentsModalIsOpen } = useSelector((state) => state.modal);
+  const selectedPostId = useLocalStorage('selectedPostId', 'get');
+
   const getFeeling = (name) => {
     const feeling = find(feelingsList, (data) => data.name === name);
     return feeling?.name;
@@ -20,6 +29,8 @@ const Post = ({ post, showIcons }) => {
 
   return (
     <>
+      {reactionsModalIsOpen && <ReactionsModal />}
+      {commentsModalIsOpen && <CommentsModal />}
       <div className="post-body" data-testid="post">
         <div className="user-post-data">
           <div className="user-post-data-wrap">
@@ -76,7 +87,7 @@ const Post = ({ post, showIcons }) => {
 
               {post?.imgId && !post?.gifUrl && post.bgColor === '#ffffff' && (
                 <div data-testid="post-image" className="image-display-flex">
-                  <img className="post-image" src="" alt="" />
+                  <img className="post-image" src={`${Utils.getImage(post.imgId, post.imgVersion)}`} alt="" />
                 </div>
               )}
 
@@ -89,6 +100,7 @@ const Post = ({ post, showIcons }) => {
               <PostCommentSection post={post} />
             </div>
           </div>
+          {selectedPostId === post?._id && <CommentInputBox post={post} />}
         </div>
       </div>
     </>
