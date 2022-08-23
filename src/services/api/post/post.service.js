@@ -16,6 +16,16 @@ class PostService {
     return response;
   }
 
+  async updatePostWithImage(postId, body) {
+    const response = await axios.put(`/post/image/${postId}`, body);
+    return response;
+  }
+
+  async updatePost(postId, body) {
+    const response = await axios.put(`/post/${postId}`, body);
+    return response;
+  }
+
   async getReactionsByUsername(username) {
     const response = await axios.get(`/post/reactions/username/${username}`);
     return response;
@@ -55,6 +65,11 @@ class PostService {
 
   async addComment(body) {
     const response = await axios.post('/post/comment', body);
+    return response;
+  }
+
+  async deletePost(postId) {
+    const response = await axios.delete(`/post/${postId}`);
     return response;
   }
 }

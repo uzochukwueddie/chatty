@@ -1,23 +1,23 @@
 import PostWrapper from '@components/posts/modal-wrappers/post-wrapper/PostWrapper';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import '@components/posts/post-modal/post-add/AddPost.scss';
+import '@components/posts/post-modal/post-edit/EditPost.scss';
 import ModalBoxContent from '@components/posts/post-modal/modal-box-content/ModalBoxContent';
 import { FaArrowLeft, FaTimes } from 'react-icons/fa';
-import { bgColors } from '@services/utils/static.data';
+import { bgColors, feelingsList } from '@services/utils/static.data';
 import ModalBoxSelection from '@components/posts/post-modal/modal-box-content/ModalBoxSelection';
 import Button from '@components/button/Button';
 import { PostUtils } from '@services/utils/post-utils.service';
-import { closeModal, toggleGifModal } from '@redux/reducers/modal/modal.reducer';
+import { addPostFeeling, closeModal, toggleGifModal } from '@redux/reducers/modal/modal.reducer';
 import Giphy from '@components/giphy/Giphy';
-import PropTypes from 'prop-types';
 import { ImageUtils } from '@services/utils/image-utils.service';
-import { postService } from '@services/api/post/post.service';
 import Spinner from '@components/spinner/Spinner';
+import { find } from 'lodash';
+import { Utils } from '@services/utils/utils.service';
 
-const AddPost = ({ selectedImage }) => {
+const EditPost = () => {
   const { gifModalIsOpen, feeling } = useSelector((state) => state.modal);
-  const { gifUrl, image, privacy } = useSelector((state) => state.post);
+  const { post } = useSelector((state) => state);
   const { profile } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
   const [postImage, setPostImage] = useState('');
@@ -30,11 +30,13 @@ const AddPost = ({ selectedImage }) => {
     feelings: '',
     gifUrl: '',
     profilePicture: '',
-    image: ''
+    image: '',
+    imgId: '',
+    imgVersion: ''
   });
   const [disable, setDisable] = useState(true);
   const [apiResponse, setApiResponse] = useState('');
-  const [selectedPostImage, setSelectedPostImage] = useState();
+  const [selectedPostImage, setSelectedPostImage] = useState(null);
   const counterRef = useRef(null);
   const inputRef = useRef(null);
   const imageInputRef = useRef(null);
@@ -66,47 +68,84 @@ const AddPost = ({ selectedImage }) => {
   };
 
   const clearImage = () => {
-    PostUtils.clearImage(postData, '', inputRef, dispatch, setSelectedPostImage, setPostImage, setPostData);
+    PostUtils.clearImage(postData, post?.post, inputRef, dispatch, setSelectedPostImage, setPostImage, setPostData);
   };
 
-  const createPost = async () => {
+  const getFeeling = useCallback(
+    (name) => {
+      const feeling = find(feelingsList, (data) => data.name === name);
+      dispatch(addPostFeeling({ feeling }));
+    },
+    [dispatch]
+  );
+
+  const postInputData = useCallback(() => {
+    setTimeout(() => {
+      if (imageInputRef?.current) {
+        postData.post = post?.post;
+        imageInputRef.current.textContent = post?.post;
+        setPostData(postData);
+      }
+    });
+  }, [post, postData]);
+
+  const editableFields = useCallback(() => {
+    if (post?.feelings) {
+      getFeeling(post?.feelings);
+    }
+
+    if (post?.bgColor) {
+      postData.bgColor = post?.bgColor;
+      setPostData(postData);
+      setTextAreaBackground(post?.bgColor);
+      setTimeout(() => {
+        if (inputRef?.current) {
+          postData.post = post?.post;
+          inputRef.current.textContent = post?.post;
+          setPostData(postData);
+        }
+      });
+    }
+
+    if (post?.gifUrl && !post?.imgId) {
+      postData.gifUrl = post?.gifUrl;
+      setPostImage(post?.gifUrl);
+      postInputData();
+    }
+
+    if (post?.imgId && !post?.gifUrl) {
+      postData.imgId = post?.imgId;
+      postData.imgVersion = post?.imgVersion;
+      const imageUrl = Utils.getImage(post?.imgId, post?.imgVersion);
+      setPostImage(imageUrl);
+      postInputData();
+    }
+  }, [post, postData, getFeeling, postInputData]);
+
+  const updatePost = async () => {
     setLoading(!loading);
     setDisable(!disable);
     try {
       if (Object.keys(feeling).length) {
         postData.feelings = feeling?.name;
       }
-      postData.privacy = privacy || 'Public';
-      postData.gifUrl = gifUrl;
+      if (postData.gifUrl || (postData.imgId && postData.imgVersion)) {
+        postData.bgColor = '#ffffff';
+      }
+      postData.privacy = post?.privacy || 'Public';
       postData.profilePicture = profile?.profilePicture;
-      if (selectedPostImage || selectedImage) {
-        let result = '';
-        if (selectedPostImage) {
-          result = await ImageUtils.readAsBase64(selectedPostImage);
-        }
-
-        if (selectedImage) {
-          result = await ImageUtils.readAsBase64(selectedImage);
-        }
-        const response = await PostUtils.sendPostWithImageRequest(
+      if (selectedPostImage) {
+        const result = await ImageUtils.readAsBase64(selectedPostImage);
+        await PostUtils.sendUpdatePostWithImageRequest(
           result,
+          post?._id,
           postData,
-          imageInputRef,
           setApiResponse,
           setLoading,
-          setDisable,
           dispatch
         );
-        if (response && response?.data?.message) {
-          PostUtils.closePostModal(dispatch);
-        }
       } else {
-        const response = await postService.createPost(postData);
-        if (response) {
-          setApiResponse('success');
-          setLoading(false);
-          PostUtils.closePostModal(dispatch);
-        }
+        await PostUtils.sendUpdatePostRequest(post?._id, postData, setApiResponse, setLoading, dispatch);
       }
     } catch (error) {
       PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, dispatch);
@@ -115,24 +154,37 @@ const AddPost = ({ selectedImage }) => {
 
   useEffect(() => {
     PostUtils.positionCursor('editable');
+  }, [post]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (imageInputRef?.current && imageInputRef?.current.textContent.length) {
+        counterRef.current.textContent = `${maxNumberOfCharacters - imageInputRef?.current.textContent.length}/100`;
+      } else if (inputRef?.current && inputRef?.current.textContent.length) {
+        counterRef.current.textContent = `${maxNumberOfCharacters - inputRef?.current.textContent.length}/100`;
+      }
+    });
   }, []);
 
   useEffect(() => {
     if (!loading && apiResponse === 'success') {
       dispatch(closeModal());
     }
-    setDisable(postData.post.length <= 0 && !postImage);
-  }, [loading, dispatch, apiResponse, postData, postImage]);
+    setDisable(post?.post.length <= 0 && !postImage);
+  }, [loading, dispatch, apiResponse, post, postImage]);
 
   useEffect(() => {
-    if (gifUrl) {
-      setPostImage(gifUrl);
-      PostUtils.postInputData(imageInputRef, postData, '', setPostData);
-    } else if (image) {
-      setPostImage(image);
-      PostUtils.postInputData(imageInputRef, postData, '', setPostData);
+    if (post?.gifUrl) {
+      postData.image = '';
+      setSelectedPostImage(null);
+      setPostImage(post?.gifUrl);
+      PostUtils.postInputData(imageInputRef, postData, post?.post, setPostData);
+    } else if (post?.image) {
+      setPostImage(post?.image);
+      PostUtils.postInputData(imageInputRef, postData, post?.post, setPostData);
     }
-  }, [gifUrl, image, postData]);
+    editableFields();
+  }, [editableFields, post, postData]);
 
   return (
     <>
@@ -142,17 +194,17 @@ const AddPost = ({ selectedImage }) => {
           <div
             className="modal-box"
             style={{
-              height: selectedPostImage || gifUrl || image || postData?.gifUrl || postData?.image ? '700px' : 'auto'
+              height: selectedPostImage || post?.gifUrl || post?.imgId ? '700px' : 'auto'
             }}
           >
             {loading && (
               <div className="modal-box-loading" data-testid="modal-box-loading">
-                <span>Posting...</span>
+                <span>Updating post...</span>
                 <Spinner />
               </div>
             )}
             <div className="modal-box-header">
-              <h2>Create Post</h2>
+              <h2>Edit Post</h2>
               <button className="modal-box-header-cancel" onClick={() => closePostModal()}>
                 X
               </button>
@@ -241,7 +293,7 @@ const AddPost = ({ selectedImage }) => {
             <ModalBoxSelection setSelectedPostImage={setSelectedPostImage} />
 
             <div className="modal-box-button" data-testid="post-button">
-              <Button label="Create Post" className="post-button" disabled={disable} handleClick={createPost} />
+              <Button label="Update" className="post-button" disabled={disable} handleClick={updatePost} />
             </div>
           </div>
         )}
@@ -264,7 +316,5 @@ const AddPost = ({ selectedImage }) => {
     </>
   );
 };
-AddPost.propTypes = {
-  selectedImage: PropTypes.string
-};
-export default AddPost;
+
+export default EditPost;

@@ -59,15 +59,7 @@ export class PostUtils {
     Utils.dispatchNotification(message, type, dispatch);
   }
 
-  static async sendPostWithImageRequest(
-    fileResult,
-    postData,
-    imageInputRef,
-    setApiResponse,
-    setLoading,
-    setDisable,
-    dispatch
-  ) {
+  static async sendPostWithImageRequest(fileResult, postData, imageInputRef, setApiResponse, setLoading, dispatch) {
     try {
       postData.image = fileResult;
       if (imageInputRef?.current) {
@@ -79,14 +71,39 @@ export class PostUtils {
         setLoading(false);
       }
     } catch (error) {
-      PostUtils.dispatchNotification(
-        error.response.data.message,
-        'error',
-        setApiResponse,
-        setLoading,
-        setDisable,
-        dispatch
-      );
+      PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, dispatch);
+    }
+  }
+
+  static async sendUpdatePostWithImageRequest(fileResult, postId, postData, setApiResponse, setLoading, dispatch) {
+    try {
+      postData.image = fileResult;
+      postData.gifUrl = '';
+      postData.imgId = '';
+      postData.imgVersion = '';
+      const response = await postService.updatePostWithImage(postId, postData);
+      if (response) {
+        PostUtils.dispatchNotification(response.data.message, 'success', setApiResponse, setLoading, dispatch);
+        setTimeout(() => {
+          setApiResponse('success');
+          setLoading(false);
+        }, 3000);
+        PostUtils.closePostModal(dispatch);
+      }
+    } catch (error) {
+      PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, dispatch);
+    }
+  }
+
+  static async sendUpdatePostRequest(postId, postData, setApiResponse, setLoading, dispatch) {
+    const response = await postService.updatePost(postId, postData);
+    if (response) {
+      PostUtils.dispatchNotification(response.data.message, 'success', setApiResponse, setLoading, dispatch);
+      setTimeout(() => {
+        setApiResponse('success');
+        setLoading(false);
+      }, 3000);
+      PostUtils.closePostModal(dispatch);
     }
   }
 
