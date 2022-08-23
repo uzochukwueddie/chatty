@@ -5,6 +5,7 @@ import { FaPencilAlt, FaRegTrashAlt } from 'react-icons/fa';
 import { find } from 'lodash';
 import { feelingsList, privacyList } from '@services/utils/static.data';
 import '@components/posts/post/Post.scss';
+import PostCommentSection from '@components/posts/post-comment-section/PostCommentSection';
 
 const Post = ({ post, showIcons }) => {
   const getFeeling = (name) => {
@@ -85,6 +86,7 @@ const Post = ({ post, showIcons }) => {
                 </div>
               )}
               {(post?.reactions.length > 0 || post?.commentsCount > 0) && <hr />}
+              <PostCommentSection post={post} />
             </div>
           </div>
         </div>

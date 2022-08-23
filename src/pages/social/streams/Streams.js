@@ -12,6 +12,8 @@ import { getPosts } from '@redux/api/posts';
 import { uniqBy } from 'lodash';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PostUtils } from '@services/utils/post-utils.service';
+import useLocalStorage from '@hooks/useLocalStorage';
+import { addReactions } from '@redux/reducers/post/user-post-reaction.reducer';
 
 const Streams = () => {
   const { allPosts } = useSelector((state) => state);
@@ -23,6 +25,7 @@ const Streams = () => {
   const bottomLineRef = useRef();
   let appPosts = useRef([]);
   const dispatch = useDispatch();
+  const storedUsername = useLocalStorage('username', 'get');
   useInfiniteScroll(bodyRef, bottomLineRef, fetchPostData);
   const PAGE_SIZE = 8;
 
@@ -49,12 +52,22 @@ const Streams = () => {
     }
   };
 
+  const getReactionsByUsername = async () => {
+    try {
+      const response = await postService.getReactionsByUsername(storedUsername);
+      dispatch(addReactions(response.data.reactions));
+    } catch (error) {
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  };
+
   useEffectOnce(() => {
-    dispatch(getUserSuggestions());
+    getReactionsByUsername();
   });
 
   useEffect(() => {
     dispatch(getPosts());
+    dispatch(getUserSuggestions());
   }, [dispatch]);
 
   useEffect(() => {
