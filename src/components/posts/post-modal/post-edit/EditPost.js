@@ -292,7 +292,7 @@ const EditPost = () => {
 
             <ModalBoxSelection setSelectedPostImage={setSelectedPostImage} />
 
-            <div className="modal-box-button" data-testid="post-button">
+            <div className="modal-box-button" data-testid="edit-button">
               <Button label="Update" className="post-button" disabled={disable} handleClick={updatePost} />
             </div>
           </div>

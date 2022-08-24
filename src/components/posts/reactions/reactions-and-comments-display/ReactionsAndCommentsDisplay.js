@@ -28,7 +28,6 @@ const ReactionsAndCommentsDisplay = ({ post }) => {
   const getPostCommentsNames = async () => {
     try {
       const response = await postService.getPostCommentsNames(post?._id);
-      console.log(response.data.comments);
       setPostCommentNames([...new Set(response.data.comments.names)]);
     } catch (error) {
       Utils.dispatchNotification(error?.response?.data?.message, 'error', dispatch);
