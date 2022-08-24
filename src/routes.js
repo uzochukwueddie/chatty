@@ -5,6 +5,7 @@ import { useRoutes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import StreamsSkeleton from '@pages/social/streams/StreamsSkeleton';
 import NotificationSkeleton from '@pages/social/notifications/NotificationSkeleton';
+import CardSkeleton from '@components/card-element/CardSkeleton';
 
 const Social = lazy(() => import('@pages/social/Social'));
 const Chat = lazy(() => import('@pages/social/chat/Chat'));
@@ -57,7 +58,7 @@ export const AppRouter = () => {
         {
           path: 'people',
           element: (
-            <Suspense>
+            <Suspense fallback={<CardSkeleton />}>
               <People />
             </Suspense>
           )
