@@ -33,11 +33,11 @@ describe('Notification', () => {
   });
 
   it('should handle mark as read', async () => {
-    jest.spyOn(NotificationUtils, 'markMessagesAsRead');
+    jest.spyOn(NotificationUtils, 'markMessageAsRead');
     render(<Notification />);
     const cardElementItems = await screen.findAllByTestId('notification-box');
     userEvent.click(cardElementItems[0]);
-    expect(NotificationUtils.markMessagesAsRead).toHaveBeenCalledWith(
+    expect(NotificationUtils.markMessageAsRead).toHaveBeenCalledWith(
       notificationData._id,
       notificationData,
       expect.any(Function)

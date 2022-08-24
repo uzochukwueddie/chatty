@@ -17,7 +17,7 @@ export const postMockData = {
   reactions: {
     like: 1,
     love: 2,
-    haha: 0,
+    happy: 0,
     wow: 0,
     sad: 0,
     angry: 0
@@ -43,7 +43,7 @@ export const editPostMockData = {
   reactions: {
     like: 1,
     love: 2,
-    haha: 0,
+    happy: 0,
     wow: 0,
     sad: 0,
     angry: 0
@@ -65,7 +65,7 @@ export const postReactionOne = {
   _id: '6027f77087c9d9ccb1555380',
   username: 'Danny',
   avataColor: '#4caf50',
-  type: 'haha',
+  type: 'happy',
   postId: '6027f77087c9d9ccb1555268',
   profilePicture: 'https://place-hold.it/500x500',
   createdAt: '2022-05-16',

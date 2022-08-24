@@ -1,9 +1,9 @@
 import blessed from '@assets/feelings/blessed.jpg';
 import excited from '@assets/feelings/excited.jpg';
-import happy from '@assets/feelings/happy.jpg';
+import happyFeelings from '@assets/feelings/happy.jpg';
 import loved from '@assets/feelings/loved.jpg';
 import angry from '@assets/reactions/angry.png';
-import happyReaction from '@assets/reactions/happy.png';
+import happy from '@assets/reactions/happy.png';
 import like from '@assets/reactions/like.png';
 import love from '@assets/reactions/love.png';
 import sad from '@assets/reactions/sad.png';
@@ -80,7 +80,7 @@ export const feelingsList = [
   {
     index: 0,
     name: 'happy',
-    image: happy
+    image: happyFeelings
   },
   {
     index: 1,
@@ -197,7 +197,7 @@ export const reactionsMap = {
   love,
   wow,
   sad,
-  happyReaction,
+  happy,
   angry
 };
 

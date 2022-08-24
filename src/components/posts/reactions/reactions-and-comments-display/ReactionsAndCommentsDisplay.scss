@@ -1,0 +1,156 @@
+.reactions-display {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--white-4);
+  display: grid;
+  grid-template-areas: "reaction comment";
+  grid-template-columns: max-content 1fr;
+  grid-template-rows: 1fr;
+
+  span {
+    padding-top: 2px;
+    padding-left: 8px;
+  }
+
+  .tooltip-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 15px;
+
+    .tooltip-container-likes-bottom {
+      top: 135%;
+      left: 50%;
+      margin-left: -30px;
+    }
+
+    .tooltip-container-comments-bottom {
+      top: 135%;
+      left: -100%;
+    }
+  }
+
+  .tooltip-container-text {
+    visibility: hidden;
+    position: absolute;
+    width: 200px;
+    background-color: var(--gray-15);
+    padding: 5px 8px;
+    border-radius: 6px;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.6s;
+
+    .title {
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding-left: 8px;
+      color: var(--white-7);
+      margin-bottom: 0;
+      display: flex;
+      padding-bottom: 10px;
+
+      .title-img {
+        width: 15px;
+        height: 15px;
+        margin-right: 5px;
+      }
+    }
+
+    .likes-block-icons-list {
+      float: left;
+      max-height: 500px;
+      margin-bottom: 0;
+      width: auto;
+      height: auto;
+
+      .circle-notch {
+        margin-left: 85px;
+        color: var(--white-1);
+      }
+
+      span {
+        font-size: 0.75rem;
+        font-weight: normal;
+        display: block;
+        color: var(--white-1);
+      }
+    }
+  }
+
+  .reaction {
+    grid-area: reaction;
+    display: block;
+    cursor: pointer;
+
+    .likes-block {
+      display: grid;
+      grid-template-areas: "reactions-icon-display reactions-count";
+      grid-template-columns: max-content 1fr;
+      grid-template-rows: 1fr;
+      cursor: pointer;
+
+      .reactions-icon-display {
+        grid-area: reactions-icon-display;
+      }
+
+      .reactions-count {
+        grid-area: reactions-count;
+        font-size: 15px;
+      }
+
+      .likes-block-icons {
+        .reaction-img {
+          width: 18px;
+          height: 18px;
+          margin-top: 2px;
+        }
+      }
+
+      .love {
+        color: var(--red-1);
+      }
+
+      .like {
+        color: var(--primary-1);
+      }
+
+      .sad {
+        color: var(--yellow-1);
+      }
+
+      .wow {
+        color: var(--yellow-1);
+      }
+
+      .happy {
+        color: var(--yellow-1);
+      }
+
+      .angry {
+        color: var(--orange-1);
+      }
+    }
+  }
+
+  .comment {
+    grid-area: comment;
+    margin-left: auto;
+    padding-top: 2px;
+    cursor: pointer;
+  }
+
+  .tooltip-container:hover .tooltip-container-text {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  @keyframes drop {
+    0% {
+      transform: translateY(-50px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
+}

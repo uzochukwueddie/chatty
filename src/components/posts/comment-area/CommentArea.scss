@@ -1,0 +1,162 @@
+.comment-area {
+  padding: 10px 0;
+  display: grid;
+  grid-template-areas: "like-icon comment-icon";
+  grid-template-columns: max-content 1fr;
+  grid-template-rows: 1fr;
+  font-size: 14px;
+
+  .app-reactions {
+    display: none;
+  }
+
+  .reactions {
+    cursor: pointer;
+    display: block;
+    position: relative;
+
+    .reactions-container {
+      position: absolute;
+      bottom: 100%;
+      padding-bottom: 15px;
+      margin-left: -10px;
+    }
+
+    &:hover .app-reactions {
+      display: block;
+      animation: drop 500ms ease;
+    }
+  }
+
+  .comment-block {
+    grid-area: comment-icon;
+    margin-left: auto;
+    padding-top: 2px;
+    cursor: pointer;
+
+    .comments-text {
+      display: flex;
+      align-items: center;
+
+      .comment-alt {
+        margin-right: 5px;
+      }
+
+      span {
+        font-weight: 400;
+        font-size: 15px;
+      }
+    }
+  }
+
+  .like-icon {
+    grid-area: like-icon;
+    display: block;
+    cursor: pointer;
+    margin-top: 2px;
+
+    .likes-block {
+      display: grid;
+      grid-template-areas: "reactions-icon-display reactions-count";
+      grid-template-columns: max-content 1fr;
+      grid-template-rows: 1fr;
+      cursor: pointer;
+
+      .reactions-icon-display {
+        grid-area: reactions-icon-display;
+      }
+
+      .reactions-count {
+        grid-area: reactions-count;
+      }
+
+      .likes-block-icons {
+        .reaction-display {
+          display: flex;
+          align-items: center;
+
+          .reaction-img {
+            margin-right: 5px;
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            object-fit: cover;
+          }
+
+          span {
+            font-weight: 400;
+            font-size: 15px;
+          }
+        }
+
+        .love {
+          color: var(--red-1);
+        }
+
+        .like {
+          color: var(--primary-1);
+        }
+
+        .sad {
+          color: var(--yellow-1);
+        }
+
+        .wow {
+          color: var(--yellow-1);
+        }
+
+        .happy {
+          color: var(--yellow-1);
+        }
+
+        .angry {
+          color: var(--orange-1);
+        }
+
+        .thumbs-up {
+          margin-right: 5px;
+        }
+      }
+
+      .reaction-icon {
+        img {
+          margin-bottom: 4px;
+        }
+      }
+
+      .love {
+        color: var(--red-1);
+      }
+
+      .like {
+        color: var(--primary-1);
+      }
+
+      .sad {
+        color: var(--yellow-1);
+      }
+
+      .wow {
+        color: var(--yellow-1);
+      }
+
+      .happy {
+        color: var(--yellow-1);
+      }
+
+      .angry {
+        color: var(--orange-1);
+      }
+    }
+  }
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(-50px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}

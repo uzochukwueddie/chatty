@@ -1,0 +1,78 @@
+@media screen and (max-width: 576px) {
+  .react-box {
+    transform: scale(0.7);
+  }
+}
+
+.reactions {
+  list-style-type: none;
+  margin: 0;
+  border-radius: 150px;
+  background: var(--white-1);
+  box-shadow: 0 0 60px rgb(0 0 0 / 20%);
+
+  ul {
+    margin: 0;
+    padding: 0 5px;
+    display: flex;
+    height: 50px;
+  }
+
+  li {
+    display: inline-block;
+    padding: 4px;
+    transform: scale(1) translateY(0);
+    transition: transform 200ms ease;
+    position: relative;
+    text-align: center;
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+
+    label {
+      border-radius: 10px;
+      font-size: 11px;
+      color: var(--white-1);
+      background: var(--black-3);
+      visibility: hidden;
+      position: absolute;
+      margin-top: -32px;
+      text-align: center;
+      line-height: 20px;
+      padding: 5px;
+      width: 50px;
+      margin-left: -5px;
+    }
+
+    &::before {
+      content: attr(data-hover);
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--white-1);
+      padding: 0 8px;
+      border-radius: 20px;
+      font-weight: bold;
+      line-height: 20px;
+      font-size: 12px;
+      background: rgb(0 0 0 / 76%);
+      display: none;
+    }
+
+    &:hover {
+      transform: scale(1) translateY(-5px);
+      transition: transform 200ms ease;
+
+      label {
+        visibility: visible;
+      }
+
+      &::before {
+        display: inline-block;
+      }
+    }
+  }
+}

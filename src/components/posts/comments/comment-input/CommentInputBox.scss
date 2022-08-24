@@ -1,0 +1,38 @@
+.comment-container {
+  display: flex;
+  width: 100%;
+
+  .comment-form {
+    display: flex;
+    padding: 10px 0;
+    background: var(--white-1);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+
+    .form-row {
+      display: contents;
+      margin-bottom: 0;
+
+      .comment-input {
+        flex: 1;
+        background: var(--white-10);
+        cursor: pointer;
+
+        &:focus::placeholder {
+          color: var(--gray-10);
+        }
+      }
+    }
+  }
+
+  .comment-form * {
+    padding: 0 15px;
+    border: none;
+    border-radius: 20px;
+    height: 36px;
+    font-size: 15px;
+    color: var(--black-3);
+  }
+}

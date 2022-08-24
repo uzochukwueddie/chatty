@@ -1,4 +1,4 @@
-import reducer, { addToSuggestions } from '@redux/reducers/user/suggestions.reducer';
+import reducer, { addToSuggestions } from '@redux/reducers/suggestions/suggestions.reducer';
 
 const initialState = {
   users: [],

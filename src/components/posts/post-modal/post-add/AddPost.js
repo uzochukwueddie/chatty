@@ -109,14 +109,7 @@ const AddPost = ({ selectedImage }) => {
         }
       }
     } catch (error) {
-      PostUtils.dispatchNotification(
-        error.response.data.message,
-        'error',
-        setApiResponse,
-        setLoading,
-        setDisable,
-        dispatch
-      );
+      PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, dispatch);
     }
   };
 

@@ -9,9 +9,11 @@ import Posts from '@components/posts/Posts';
 import { Utils } from '@services/utils/utils.service';
 import { postService } from '@services/api/post/post.service';
 import { getPosts } from '@redux/api/posts';
-import { uniqBy } from 'lodash';
+import { orderBy, uniqBy } from 'lodash';
 import useInfiniteScroll from '@hooks/useInfiniteScroll';
 import { PostUtils } from '@services/utils/post-utils.service';
+import useLocalStorage from '@hooks/useLocalStorage';
+import { addReactions } from '@redux/reducers/post/user-post-reaction.reducer';
 
 const Streams = () => {
   const { allPosts } = useSelector((state) => state);
@@ -23,6 +25,8 @@ const Streams = () => {
   const bottomLineRef = useRef();
   let appPosts = useRef([]);
   const dispatch = useDispatch();
+  const storedUsername = useLocalStorage('username', 'get');
+  const [deleteSelectedPostId] = useLocalStorage('selectedPostId', 'delete');
   useInfiniteScroll(bodyRef, bottomLineRef, fetchPostData);
   const PAGE_SIZE = 8;
 
@@ -41,7 +45,8 @@ const Streams = () => {
       if (response.data.posts.length > 0) {
         appPosts = [...posts, ...response.data.posts];
         const allPosts = uniqBy(appPosts, '_id');
-        setPosts(allPosts);
+        const orderedPosts = orderBy(allPosts, ['createdAt'], ['desc']);
+        setPosts(orderedPosts);
       }
       setLoading(false);
     } catch (error) {
@@ -49,17 +54,29 @@ const Streams = () => {
     }
   };
 
+  const getReactionsByUsername = async () => {
+    try {
+      const response = await postService.getReactionsByUsername(storedUsername);
+      dispatch(addReactions(response.data.reactions));
+    } catch (error) {
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  };
+
   useEffectOnce(() => {
-    dispatch(getUserSuggestions());
+    getReactionsByUsername();
+    deleteSelectedPostId();
   });
 
   useEffect(() => {
     dispatch(getPosts());
+    dispatch(getUserSuggestions());
   }, [dispatch]);
 
   useEffect(() => {
     setLoading(allPosts?.isLoading);
-    setPosts(allPosts?.posts);
+    const orderedPosts = orderBy(allPosts?.posts, ['createdAt'], ['desc']);
+    setPosts(orderedPosts);
     setTotalPostsCount(allPosts?.totalPostsCount);
   }, [allPosts]);
 
