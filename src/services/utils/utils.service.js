@@ -97,6 +97,10 @@ export class Utils {
     return some(userFollowers, (user) => user._id === postCreatorId || postCreatorId === userId);
   }
 
+  static checkIfUserIsOnline(username, onlineUsers) {
+    return some(onlineUsers, (user) => user === username?.toLowerCase());
+  }
+
   static firstLetterUpperCase(word) {
     if (!word) return '';
     return `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
