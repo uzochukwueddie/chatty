@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { FaCheck, FaCircle } from 'react-icons/fa';
 
 import '@components/message-sidebar/MessageSidebar.scss';
+import { Utils } from '@services/utils/utils.service';
 
 const MessageSidebar = ({ profile, messageCount, messageNotifications, openChatPage }) => {
   return (
@@ -19,8 +20,12 @@ const MessageSidebar = ({ profile, messageCount, messageNotifications, openChatP
 
           <div className="message-card-body-info">
             <div data-testid="info-container" className="message-card-body-info-container">
-              {messageNotifications.map((notification, index) => (
-                <div className="message-sub-card" key={index} onClick={() => openChatPage(notification)}>
+              {messageNotifications.map((notification) => (
+                <div
+                  className="message-sub-card"
+                  key={Utils.generateString(10)}
+                  onClick={() => openChatPage(notification)}
+                >
                   <div className="content-avatar">
                     <Avatar
                       name={

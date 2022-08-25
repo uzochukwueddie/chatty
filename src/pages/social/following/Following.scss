@@ -1,0 +1,151 @@
+.card-container {
+  overflow-y: scroll;
+  height: 100vh;
+  max-width: 1152px;
+  margin: auto;
+  scroll-behavior: smooth;
+
+  .card-element {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 100px;
+    margin-top: 30px;
+    max-width: 1152px;
+    margin: auto;
+    background-color: var(--white-1);
+    padding: 24px;
+    border-radius: 16px;
+
+    &-item {
+      width: 247px;
+      height: 350px;
+      background-color: var(--white-1);
+      border-radius: 30px;
+      overflow: hidden;
+      transition: all 0.3s;
+      box-shadow: rgb(145 158 171 / 20%) 0 0 2px 0, rgb(145 158 171 / 12%) 0 12px 24px -4px;
+      position: relative;
+
+      &-indicator {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+
+        .online-indicator {
+          color: var(--success);
+          width: 10px;
+          height: 10px;
+        }
+      }
+    }
+
+    &-header {
+      width: 100%;
+
+      &-bg {
+        width: calc(100% + 50px);
+        height: 240px;
+        border-radius: 50%;
+        margin-left: 50%;
+        margin-top: -50%;
+      }
+
+      &-img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        transform: translateY(-50px);
+        padding: 0;
+        visibility: visible;
+        border: 0 solid rgb(255 255 255 / 60%);
+        display: block;
+        box-shadow: 0 9px 28px 8px rgb(93 93 93 / 20%);
+        transition: all 0.5s;
+      }
+
+      .avatar-container {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        transform: translateY(-70px);
+        padding: 0;
+        visibility: visible;
+        border: 0 solid rgb(255 255 255 / 60%);
+        display: block;
+        transition: all 0.5s;
+      }
+
+      &-text {
+        width: 100%;
+        margin-top: -30px;
+        transform: translateY(-20px);
+      }
+
+      &-name {
+        text-align: center;
+        display: block;
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--black-6);
+        letter-spacing: 1px;
+      }
+    }
+
+    &-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-flow: dense;
+      height: 40px;
+      transform: translateY(-5px);
+
+      &-group {
+        display: grid;
+        height: 40px;
+
+        &-title {
+          color: var(--gray-5);
+          text-transform: uppercase;
+          font-size: 12px;
+          margin: 0;
+          text-align: center;
+        }
+
+        &-info {
+          color: var(--primary-1);
+          text-align: center;
+          font-size: 14px;
+        }
+      }
+    }
+
+    &-buttons {
+      height: 50px;
+      text-align: center;
+      transform: translateY(10%);
+
+      &-btn {
+        font-weight: bold;
+        border: 1px solid transparent;
+        width: 100px;
+        color: var(--white-1);
+        background-color: var(--primary-1);
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        outline: none;
+      }
+
+      &-btn:nth-child(2) {
+        margin-left: 5px;
+      }
+
+      .isUserFollowed {
+        background-color: var(--red-3);
+      }
+    }
+  }
+}

@@ -58,4 +58,41 @@ export class ImageUtils {
     });
     return fileValue;
   }
+
+  static getBackgroundImageColor(imageUrl) {
+    const image = new Image();
+    image.crossOrigin = 'Anonymous';
+    const backgroundImageColor = new Promise((resolve, reject) => {
+      image.addEventListener('load', () => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        context.drawImage(image, 0, 0);
+
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        const params = imageData.data;
+        const bgColor = ImageUtils.convertRGBToHex(params[0], params[1], params[2]);
+        resolve(bgColor);
+      });
+
+      image.addEventListener('error', (event) => {
+        reject(event);
+      });
+
+      image.src = imageUrl;
+    });
+    return backgroundImageColor;
+  }
+
+  static convertRGBToHex(red, green, blue) {
+    red = red.toString(16);
+    green = green.toString(16);
+    blue = blue.toString(16);
+
+    red = red.length === 1 ? '0' + red : red;
+    green = green.length === 1 ? '0' + green : green;
+    blue = blue.length === 1 ? '0' + blue : blue;
+    return `#${red}${green}${blue}`;
+  }
 }
