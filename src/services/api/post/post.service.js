@@ -51,6 +51,11 @@ class PostService {
     return response;
   }
 
+  async getPostsWithImages(page) {
+    const response = await axios.get(`/post/images/${page}`);
+    return response;
+  }
+
   async addReaction(body) {
     const response = await axios.post('/post/reaction', body);
     return response;

@@ -1,0 +1,23 @@
+.photos-container {
+  max-width: 1152px;
+  margin: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 100vh;
+
+  .gallery-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 352px);
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 100px;
+    background-color: var(--white-1);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: rgb(145 158 171 / 20%) 0 0 2px 0, rgb(145 158 171 / 12%) 0 12px 24px -4px;
+
+    .empty-post-div {
+      display: none;
+    }
+  }
+}
