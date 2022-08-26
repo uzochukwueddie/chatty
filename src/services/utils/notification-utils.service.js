@@ -106,4 +106,51 @@ export class NotificationUtils {
     }
     await notificationService.markNotificationAsRead(messageId);
   }
+
+  static socketIOMessageNotification(
+    profile,
+    messageNotifications,
+    setMessageNotifications,
+    setMessageCount,
+    dispatch,
+    location
+  ) {
+    socketService?.socket?.on('chat list', (data) => {
+      messageNotifications = cloneDeep(messageNotifications);
+      if (data?.receiverUsername === profile?.username) {
+        const notificationData = {
+          senderId: data.senderId,
+          senderUsername: data.senderUsername,
+          senderAvatarColor: data.senderAvatarColor,
+          senderProfilePicture: data.senderProfilePicture,
+          receiverId: data.receiverId,
+          receiverUsername: data.receiverUsername,
+          receiverAvatarColor: data.receiverAvatarColor,
+          receiverProfilePicture: data.receiverProfilePicture,
+          messageId: data._id,
+          conversationId: data.conversationId,
+          body: data.body,
+          isRead: data.isRead
+        };
+        const messageIndex = findIndex(
+          messageNotifications,
+          (notification) => notification.conversationId === data.conversationId
+        );
+        if (messageIndex > -1) {
+          remove(messageNotifications, (notification) => notification.conversationId === data.conversationId);
+          messageNotifications = [notificationData, ...messageNotifications];
+        } else {
+          messageNotifications = [notificationData, ...messageNotifications];
+        }
+        const count = sumBy(messageNotifications, (notification) => {
+          return !notification.isRead ? 1 : 0;
+        });
+        if (!Utils.checkUrl(location.pathname, 'chat')) {
+          Utils.dispatchNotification('You have a new message', 'success', dispatch);
+        }
+        setMessageCount(count);
+        setMessageNotifications(messageNotifications);
+      }
+    });
+  }
 }

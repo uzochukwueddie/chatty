@@ -1,0 +1,26 @@
+.image-preview-container {
+  position: absolute;
+  bottom: 55px;
+
+  .image-preview {
+    border: 1px solid var(--white-4);
+    border-radius: 0.25rem;
+    padding: 0.75rem;
+    padding-bottom: 0.5rem;
+
+    .img {
+      border-radius: 0.25rem;
+      width: 150px;
+      height: 100px;
+      object-fit: cover;
+    }
+
+    .icon {
+      position: absolute;
+      margin-top: 5px;
+      color: var(--white-1);
+      cursor: pointer;
+      right: 18px;
+    }
+  }
+}

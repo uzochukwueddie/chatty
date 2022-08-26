@@ -1,0 +1,55 @@
+.search-result {
+  overflow-y: scroll;
+  height: 780px;
+
+  &-container {
+    color: var(--white-1);
+    padding: 0;
+
+    &-item {
+      display: grid;
+      grid-template-columns: 40px 1fr max-content;
+      width: 100%;
+      margin-bottom: 15px;
+      align-items: center;
+
+      &:hover {
+        background: var(--white-7);
+        cursor: pointer;
+      }
+
+      img {
+        height: 40px;
+        width: 40px;
+        border-radius: 100%;
+      }
+
+      .username {
+        color: var(--black-3);
+        font-weight: 700;
+        font-size: 14px;
+        margin-left: 10px;
+        white-space: nowrap;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    &-empty {
+      text-align: center;
+
+      span {
+        font-size: 17px;
+        font-weight: 500;
+        color: var(--gray-3);
+      }
+
+      &-msg {
+        font-size: 13px;
+        color: var(--gray-3);
+        word-break: break-all;
+        margin: 0 20px;
+      }
+    }
+  }
+}
