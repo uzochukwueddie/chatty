@@ -7,6 +7,7 @@ import '@pages/social/people/People.scss';
 import { followerService } from '@services/api/followers/follower.service';
 import { userService } from '@services/api/user/user.service';
 import { socketService } from '@services/socket/socket.service';
+import { ChatUtils } from '@services/utils/chat-utils.service';
 import { FollowersUtils } from '@services/utils/followers-utils.service';
 import { ProfileUtils } from '@services/utils/profile-utils.service';
 import { Utils } from '@services/utils/utils.service';
@@ -20,7 +21,7 @@ const People = () => {
   const { profile } = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const [following, setFollowing] = useState([]);
-  const [onlineUsers] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalUsersCount, setTotalUsersCount] = useState(0);
@@ -96,6 +97,7 @@ const People = () => {
 
   useEffect(() => {
     FollowersUtils.socketIOFollowAndUnfollow(users, following, setFollowing, setUsers);
+    ChatUtils.usersOnline(setOnlineUsers);
   }, [following, users]);
 
   return (

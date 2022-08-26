@@ -76,10 +76,6 @@ export class ImageUtils {
         resolve(bgColor);
       });
 
-      image.addEventListener('error', (event) => {
-        reject(event);
-      });
-
       image.src = imageUrl;
     });
     return backgroundImageColor;

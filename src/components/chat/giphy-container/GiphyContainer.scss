@@ -1,0 +1,87 @@
+.giphy-search-container {
+  bottom: 55px;
+  height: 360px;
+  margin-left: 45px;
+  position: absolute;
+  border-radius: 4px;
+  background-color: var(--white-1);
+  border: 1px solid var(--white-18);
+  display: grid;
+  padding-bottom: 2px;
+  z-index: 2;
+
+  .giphy-search {
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .giphy-search-input {
+    position: relative;
+    padding: 10px 10px 0;
+
+    .search-input {
+      width: 100%;
+      padding-left: 40px;
+      height: 45px;
+      line-height: 45px;
+      background: transparent;
+      border: 1px solid var(--white-4);
+      font-size: 14px;
+      color: var(--gray-8);
+      border-radius: 10px;
+      outline: medium none;
+      overflow: visible;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .search {
+      position: absolute;
+      top: 8px;
+      left: 25px;
+      color: var(--primary-1);
+      font-size: 16px;
+      height: 30px;
+      margin-top: 10px;
+    }
+  }
+
+  .search-results {
+    height: 100%;
+    overflow-y: auto;
+    list-style-type: none;
+
+    img {
+      width: 274px;
+      height: 274px;
+      cursor: pointer;
+      padding: 2px;
+      margin: 0 auto;
+      text-align: center;
+      object-fit: cover;
+    }
+
+    .gif-result {
+      padding-bottom: 15px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 0.8rem;
+    }
+  }
+
+  ul li {
+    height: auto;
+  }
+}
+
+.giphy-search-container::after {
+  content: "";
+  position: absolute;
+  left: 4%;
+  bottom: -9px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid var(--primary-1);
+  clear: both;
+}
