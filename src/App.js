@@ -16,7 +16,7 @@ const App = () => {
   return (
     <>
       {notifications && notifications.length > 0 && (
-        <Toast position="top-right" toastList={notifications} autoDelete={false} />
+        <Toast position="top-right" toastList={notifications} autoDelete={true} />
       )}
       <BrowserRouter>
         <AppRouter />

@@ -1,0 +1,41 @@
+.profile-wrapper {
+  height: 100vh;
+  max-width: 1152px;
+  margin: auto;
+  overflow: scroll;
+
+  &-container {
+    display: grid;
+    grid-template-areas:
+      "header"
+      "content";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+
+    .profile-header {
+      grid-area: header;
+    }
+
+    .profile-content {
+      grid-area: content;
+
+      .imageGrid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 352px);
+        gap: 20px;
+        justify-content: center;
+        margin-bottom: 100px;
+        background-color: var(--white-1);
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: rgb(145 158 171 / 20%) 0 0 2px 0, rgb(145 158 171 / 12%) 0 12px 24px -4px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .profile-content {
+    margin: 0 10px;
+  }
+}
