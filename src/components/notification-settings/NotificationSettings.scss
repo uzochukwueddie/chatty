@@ -1,0 +1,93 @@
+.notification-settings {
+  background: var(--white-1);
+  padding: 10px;
+  padding-bottom: 0px;
+  height: 100%;
+  margin-bottom: 100px;
+
+  &-container {
+    transition: all 0.3s;
+    height: 70px;
+
+    &-sub-card {
+      font-size: inherit;
+      padding: 5px 15px;
+      line-height: normal;
+      color: inherit;
+      width: 100%;
+      display: grid;
+      grid-template-areas: "content toggle";
+      grid-template-columns: 1fr 70px;
+      grid-template-rows: 1fr;
+
+      &-body {
+        grid-area: content;
+        padding-top: 5px;
+
+        .title {
+          font-size: 16px;
+          line-height: 21px;
+          height: 21px;
+          margin-bottom: 2px;
+          color: var(--primary-1);
+        }
+
+        .subtitle-body {
+          margin-top: 5px;
+        }
+
+        .subtext {
+          font-size: 14px;
+          color: var(--gray-41);
+        }
+      }
+
+      .toggle {
+        grid-area: toggle;
+        margin-top: 15px;
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .notification-container:last-child {
+    border-bottom: 1px solid var(--red-4);
+  }
+
+  .btn-group {
+    float: left;
+    margin-left: 15px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+
+    .update {
+      display: inline-block;
+      font-weight: 700;
+      border: 1px solid transparent;
+      padding: 8px 14px;
+      line-height: 1.5;
+      color: var(--white-4);
+      background-color: var(--primary-1);
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      outline: none;
+      margin-right: 5px;
+    }
+
+    .cancel {
+      display: inline-block;
+      font-weight: 700;
+      border: 1px solid transparent;
+      padding: 8px 14px;
+      line-height: 1.5;
+      margin-right: 10px;
+      color: var(--black-5);
+      background-color: var(--white-9);
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      outline: none;
+    }
+  }
+}
