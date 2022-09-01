@@ -1,7 +1,8 @@
 import { postReactionOne, postReactionTwo } from '@mocks/data/post.mock';
+import { BASE_ENDPOINT } from '@services/axios';
 import { rest } from 'msw';
 
-const BASE_URL = `${process.env.REACT_APP_BASE_ENDPOINT}/api/v1`;
+const BASE_URL = `${BASE_ENDPOINT}/api/v1`;
 
 export const getReactionsByUsernameMock = rest.get(`${BASE_URL}/post/reactions/username/Danny`, (req, res, ctx) => {
   const result = {

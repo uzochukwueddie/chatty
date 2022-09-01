@@ -1,10 +1,11 @@
+import { BASE_ENDPOINT } from '@services/axios';
 import { io } from 'socket.io-client';
 
 class SocketService {
   socket;
 
   setupSocketConnection() {
-    this.socket = io(process.env.REACT_APP_BASE_ENDPOINT, {
+    this.socket = io(BASE_ENDPOINT, {
       transports: ['websocket'],
       secure: true
     });
