@@ -210,7 +210,7 @@ jobs:
       - run:
           name: Upload build to S3
           command: |
-            aws --region eu-central-1 s3 cp ~/repo/build s3://chatapp-client-${CIRCLE_BRANCH}-app --delete
+            aws --region eu-central-1 s3 cp ~/repo/build s3://chatapp-client-${CIRCLE_BRANCH}-app
       - *notify-on-fail
 
   aws-cloudfront-distribution:
