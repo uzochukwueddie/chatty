@@ -210,7 +210,9 @@ jobs:
       - run:
           name: Upload build to S3
           command: |
-            aws --region eu-central-1 s3 cp ~/repo/build s3://chatapp-client-${CIRCLE_BRANCH}-app
+            pwd
+            ls -la
+            aws --region eu-central-1 s3 cp build s3://chatapp-client-${CIRCLE_BRANCH}-app
       - *notify-on-fail
 
   aws-cloudfront-distribution:
@@ -314,7 +316,34 @@ workflows:
   build_and_deploy:
     jobs:
       - install-dependencies
-      - linting:
+      # - linting:
+      #     requires:
+      #       - install-dependencies
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - code-formatter-check:
+      #     requires:
+      #       - linting
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - unit-test:
+      #     requires:
+      #       - code-formatter-check
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      - build-app:
           requires:
             - install-dependencies
           filters:
@@ -323,54 +352,27 @@ workflows:
                 - develop
                 - staging
                 - main
-      - code-formatter-check:
-          requires:
-            - linting
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - unit-test:
-          requires:
-            - code-formatter-check
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - build-app:
-          requires:
-            - unit-test
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - terraform-validate:
-          requires:
-            - build-app
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - terraform-plan-and-apply:
-          requires:
-            - terraform-validate
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
+      # - terraform-validate:
+      #     requires:
+      #       - build-app
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - terraform-plan-and-apply:
+      #     requires:
+      #       - terraform-validate
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
       - upload-build-to-s3:
           requires:
-            - terraform-plan-and-apply
+            - build-app
           filters:
             branches:
               only:
