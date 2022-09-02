@@ -197,7 +197,7 @@ jobs:
             fi
             npm run build
             echo "Build successful"
-            aws --region eu-central-1 s3 cp build s3://chatapp-client-${CIRCLE_BRANCH}-app
+            aws --region eu-central-1 s3 cp build s3://chatapp-client-${CIRCLE_BRANCH}-app --recursive
       - *notify-on-fail
 
   aws-cloudfront-distribution:
@@ -301,54 +301,54 @@ workflows:
   build_and_deploy:
     jobs:
       - install-dependencies
-      - linting:
-          requires:
-            - install-dependencies
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - code-formatter-check:
-          requires:
-            - linting
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - unit-test:
-          requires:
-            - code-formatter-check
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - terraform-validate:
-          requires:
-            - unit-test
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - terraform-plan-and-apply:
-          requires:
-            - terraform-validate
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
+      # - linting:
+      #     requires:
+      #       - install-dependencies
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - code-formatter-check:
+      #     requires:
+      #       - linting
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - unit-test:
+      #     requires:
+      #       - code-formatter-check
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - terraform-validate:
+      #     requires:
+      #       - code-formatter-check
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - terraform-plan-and-apply:
+      #     requires:
+      #       - terraform-validate
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
       - upload-build-to-s3:
           requires:
-            - terraform-plan-and-apply
+            - install-dependencies
           filters:
             branches:
               only:
