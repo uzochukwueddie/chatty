@@ -159,6 +159,7 @@ jobs:
     steps:
       - checkout
       - *show-current-branch-name
+      - run: mkdir -p temp_folder
       - run:
           name: Terraform plan
           command: |
@@ -172,7 +173,11 @@ jobs:
             cd infrastructure/
             terraform workspace select ${CIRCLE_BRANCH}
             terraform apply -auto-approve
-            terraform output cloudfront_distribution_id > ../cloudfront_distribution_id.txt
+            terraform output cloudfront_distribution_id > ../temp_folder/cloudfront_distribution_id.txt
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - temp_folder
       - *notify-on-fail
 
   upload-build-to-s3:
@@ -204,12 +209,14 @@ jobs:
     executor: app-executor
     steps:
       - checkout
+      - attach_workspace:
+          at: ./
       - aws-cli/setup:
           profile-name: default
       - run:
           name: Invalidate cloudfront distribution
           command: |
-            CLOUDFRONT_DISTRIBUTION_ID=$(cat ../cloudfront_distribution_id.txt | sed 's/\"//g')
+            CLOUDFRONT_DISTRIBUTION_ID=$(cat temp_folder/cloudfront_distribution_id.txt | sed 's/\"//g')
             echo $CLOUDFRONT_DISTRIBUTION_ID
             aws configure set preview.cloudfront true
             aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths /\*
@@ -346,18 +353,18 @@ workflows:
       #           - develop
       #           - staging
       #           - main
-      - upload-build-to-s3:
-          requires:
-            - install-dependencies
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
+      # - upload-build-to-s3:
+      #     requires:
+      #       - install-dependencies
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
       - aws-cloudfront-distribution:
           requires:
-            - upload-build-to-s3
+            - install-dependencies
           filters:
             branches:
               only:
@@ -373,16 +380,16 @@ workflows:
                 - develop
                 - staging
                 - main
-      - hold:
-          type: approval
-          requires:
-            - notify-via-slack
-      - terraform-destroy:
-          requires:
-            - hold
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
+      # - hold:
+      #     type: approval
+      #     requires:
+      #       - notify-via-slack
+      # - terraform-destroy:
+      #     requires:
+      #       - hold
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
