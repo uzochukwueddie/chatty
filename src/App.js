@@ -6,8 +6,6 @@ import { socketService } from '@services/socket/socket.service';
 import Toast from '@components/toast/Toast';
 import { useSelector } from 'react-redux';
 
-export const APP_ENVIRONMENT = 'development';
-
 const App = () => {
   const { notifications } = useSelector((state) => state);
 

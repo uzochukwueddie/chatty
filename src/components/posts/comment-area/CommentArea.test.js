@@ -18,10 +18,10 @@ describe('CommentArea', () => {
 
   it('should display default reaction icon and name', () => {
     render(<CommentArea post={postMockData} />);
-    const defaultReaction = screen.queryByTestId('default-reaction');
+    const defaultReaction = screen.queryByTestId('selected-reaction');
     expect(defaultReaction).toBeInTheDocument();
     expect(defaultReaction.childNodes.item(0)).toHaveAttribute('src', 'like.png');
-    expect(defaultReaction.childNodes.item(2).textContent).toEqual('Like');
+    expect(defaultReaction.childNodes.item(1).textContent).toEqual('Like');
   });
 
   it('should display selected reaction icon and name', async () => {

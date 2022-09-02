@@ -2,6 +2,7 @@ import Suggestions from '@components/suggestions/Suggestions';
 import { addToSuggestions } from '@redux/reducers/suggestions/suggestions.reducer';
 import { store } from '@redux/store';
 import { render, screen, waitFor } from '@root/test.utils';
+import { Utils } from '@services/utils/utils.service';
 import userEvent from '@testing-library/user-event';
 
 const user = {
@@ -29,16 +30,25 @@ const user = {
 
 describe('Suggestions', () => {
   it('should have items in list', () => {
-    store.dispatch(addToSuggestions({ users: [user, user, user], isLoading: false }));
+    const userOne = { ...user };
+    user._id = Utils.generateString(8);
+    const userTwo = { ...user };
+    user._id = Utils.generateString(6);
+    const userThree = { ...user };
+    store.dispatch(addToSuggestions({ users: [userOne, userTwo, userThree], isLoading: false }));
     render(<Suggestions />);
     const items = screen.queryAllByTestId('suggestions-item');
     expect(items.length).toEqual(3);
   });
 
   it('should display view more', () => {
-    store.dispatch(
-      addToSuggestions({ users: [user, user, user, user, user, user, user, user, user, user], isLoading: false })
-    );
+    const users = [];
+    for (const item of [user, user, user, user, user, user, user, user, user, user]) {
+      const userItem = { ...item };
+      userItem._id = Utils.generateString(10);
+      users.push(userItem);
+    }
+    store.dispatch(addToSuggestions({ users, isLoading: false }));
     const { baseElement } = render(<Suggestions />);
     const items = screen.queryAllByTestId('suggestions-item');
     const viewMore = baseElement.querySelector('.view-more');
@@ -47,9 +57,13 @@ describe('Suggestions', () => {
   });
 
   it('should change url when view more is clicked', async () => {
-    store.dispatch(
-      addToSuggestions({ users: [user, user, user, user, user, user, user, user, user, user], isLoading: false })
-    );
+    const users = [];
+    for (const item of [user, user, user, user, user, user, user, user, user, user]) {
+      const userItem = { ...item };
+      userItem._id = Utils.generateString(10);
+      users.push(userItem);
+    }
+    store.dispatch(addToSuggestions({ users, isLoading: false }));
     const { baseElement } = render(<Suggestions />);
     const viewMore = baseElement.querySelector('.view-more');
     userEvent.click(viewMore);
