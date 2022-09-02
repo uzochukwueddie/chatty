@@ -344,15 +344,15 @@ workflows:
       #           - develop
       #           - staging
       #           - main
-      # - terraform-plan-and-apply:
-      #     requires:
-      #       - terraform-validate
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - staging
-      #           - main
+      - terraform-plan-and-apply:
+          requires:
+            - install-dependencies
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
       # - upload-build-to-s3:
       #     requires:
       #       - install-dependencies
@@ -364,7 +364,7 @@ workflows:
       #           - main
       - aws-cloudfront-distribution:
           requires:
-            - install-dependencies
+            - terraform-plan-and-apply
           filters:
             branches:
               only:
