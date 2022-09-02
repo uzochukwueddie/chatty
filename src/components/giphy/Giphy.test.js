@@ -2,7 +2,7 @@ import Giphy from '@components/giphy/Giphy';
 import { emptySearchGiphyMock, getTrendingGiphyMock } from '@mocks/handlers/giphy';
 import { server } from '@mocks/server';
 import { fireEvent, render, screen, waitFor, within } from '@root/test.utils';
-import { GiphyUtils } from '@services/utils/Giphy-utils.service';
+import { GiphyUtils } from '@services/utils/giphy-utils.service';
 
 const url =
   'https://media1.giphy.com/media/qg5pk8s2h5kJy/giphy.gif?cid=b6f691b6xs6w6z065eld5ihx7moh2xlo0fyofdhij5zp9xn4&rid=giphy.gif&ct=g';
