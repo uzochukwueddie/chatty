@@ -13,7 +13,7 @@ describe('Photos', () => {
     const emptyPage = await screen.findByTestId('empty-page');
     expect(cardElementItems).toBeNull();
     expect(emptyPage).toBeInTheDocument();
-    expect(emptyPage.textContent).toEqual('You have no photos to display');
+    expect(emptyPage.textContent).toEqual('There are no photos to display');
   });
 
   it('should have 1 image', async () => {

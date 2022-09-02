@@ -42,17 +42,22 @@ describe('People', () => {
     expect(cardElementItems[2].textContent).toEqual('2');
   });
 
-  it('should have card element buttons', async () => {
+  it('should have card element buttons follow and profile', async () => {
+    jest.spyOn(Utils, 'checkIfUserIsFollowed').mockReturnValue(false);
     render(<People />);
     const cardElementButtons = await screen.findAllByTestId('card-element-buttons');
     expect(cardElementButtons[0].childElementCount).toEqual(2);
-    expect(cardElementButtons[1].childElementCount).toEqual(2);
-
     expect(cardElementButtons[0]).toBeInTheDocument();
-    expect(cardElementButtons[1]).toBeInTheDocument();
-
     expect(cardElementButtons[0].children[0].textContent).toEqual('Follow');
     expect(cardElementButtons[0].children[1].textContent).toEqual('Profile');
+  });
+
+  it('should have card element buttons unfollow and profile', async () => {
+    jest.spyOn(Utils, 'checkIfUserIsFollowed').mockReturnValue(true);
+    render(<People />);
+    const cardElementButtons = await screen.findAllByTestId('card-element-buttons');
+    expect(cardElementButtons[0].childElementCount).toEqual(2);
+    expect(cardElementButtons[0]).toBeInTheDocument();
     expect(cardElementButtons[1].children[0].textContent).toEqual('Unfollow');
     expect(cardElementButtons[1].children[1].textContent).toEqual('Profile');
   });

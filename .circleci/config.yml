@@ -1,0 +1,410 @@
+orbs:
+  codecov: codecov/codecov@3.2.3
+  aws-cli: circleci/aws-cli@3.1.3
+  slack: circleci/slack@4.10.1
+version: 2.1
+executors:
+  app-executor:
+    docker:
+      - image: cimg/node:16.17.0
+      - image: 'cibuilds/base:latest'
+    working_directory: ~/repo
+  terraform-executor:
+    docker:
+      - image: hashicorp/terraform:latest
+  slack-executor:
+    docker:
+      - image: 'cibuilds/base:latest'
+    resource_class: small
+
+aliases:
+  - &show-current-branch-name
+    run:
+      name: Show current branch
+      command: echo ${CIRCLE_BRANCH}
+  - &restore-cache
+    restore_cache:
+      keys:
+        - app-{{ checksum "package.json" }}
+        - app-
+  - &install-dependencies
+    run:
+      name: Install dependencies
+      command: npm install
+  - &save-cache
+    save_cache:
+      paths:
+        - node_modules
+      key: app-{{ checksum "package.json" }}
+  - &notify-on-fail
+    slack/notify:
+      event: fail
+      channel: 'chatty-app-builds'
+      template: ''
+      custom: |
+        {
+          "blocks": [
+            {
+              "type": "header",
+              "text": {
+                "type": "plain_text",
+                "text": "Job Failed. 🔴",
+                "emoji": true
+              }
+            },
+            {
+              "type": "section",
+              "fields": [
+                {
+                  "type": "mrkdwn",
+                  "text": "*Project*:\n$CIRCLE_PROJECT_REPONAME"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Job*: ${CIRCLE_JOB}"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Branch*:\n$CIRCLE_BRANCH"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*When*:\n$(date +'%m/%d/%Y %T')"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Build*:\n$CIRCLE_BUILD_NUM"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Author*:\n$CIRCLE_PROJECT_USERNAME"
+                }
+              ]
+            },
+            {
+              "type": "actions",
+              "elements": [
+                {
+                  "type": "button",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "View Job"
+                  },
+                  "url": "${CIRCLE_BUILD_URL}"
+                }
+              ]
+            }
+          ]
+        }
+
+jobs:
+  install-dependencies:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - *restore-cache
+      - *install-dependencies
+      - *save-cache
+      - *notify-on-fail
+
+  linting:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - *restore-cache
+      - run:
+          name: Run linting
+          command: npm run lint:check
+      - *notify-on-fail
+
+  code-formatter-check:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - *restore-cache
+      - run:
+          name: Run prettier check
+          command: npm run prettier:check
+      - *notify-on-fail
+
+  unit-test:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - *restore-cache
+      - run:
+          name: Run unit test
+          command: npm run test
+      - *notify-on-fail
+
+  build-app:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - *restore-cache
+      - aws-cli/setup:
+          profile-name: default
+      - run:
+          name: Build project
+          command: |
+            rm -rf .env
+            if [ "${CIRCLE_BRANCH}" == "develop" ]
+            then
+              aws --region eu-central-1 s3 sync s3://chattyapp-env-files/frontend/develop .
+            elif [ "${CIRCLE_BRANCH}" == "staging" ]
+            then
+              aws --region eu-central-1 s3 sync s3://chattyapp-env-files/frontend/staging .
+            else
+              aws --region eu-central-1 s3 sync s3://chattyapp-env-files/frontend/production .
+            fi
+            npm run build
+            echo "Build successful"
+      - *notify-on-fail
+
+  terraform-validate:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - run:
+          name: Terraform validate & fmt
+          command: |
+            cd infrastructure/
+            terraform init -backend=false
+            terraform validate
+            terraform fmt
+
+  terraform-plan-and-apply:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - run:
+          name: Terraform plan
+          command: |
+            cd infrastructure/
+            terraform init
+            terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
+            terraform plan
+      - run:
+          name: Terraform apply
+          command: |
+            cd infrastructure/
+            terraform workspace select ${CIRCLE_BRANCH}
+            terraform apply -auto-approve
+            terraform output cloudfront_distribution_id > ../cloudfront_distribution_id.txt
+      - *notify-on-fail
+
+  upload-build-to-s3:
+    executor: app-executor
+    steps:
+      - checkout
+      - aws-cli/setup:
+          profile-name: default
+      - *restore-cache
+      - run:
+          name: Upload build to S3
+          command: |
+            aws --region eu-central-1 s3 cp ~/repo/build s3://chatapp-client-${CIRCLE_BRANCH}-app --delete
+      - *notify-on-fail
+
+  aws-cloudfront-distribution:
+    executor: app-executor
+    steps:
+      - checkout
+      - aws-cli/setup:
+          profile-name: default
+      - run:
+          name: Invalidate cloudfront distribution
+          command: |
+            CLOUDFRONT_DISTRIBUTION_ID=$(cat ../cloudfront_distribution_id.txt | sed 's/\"//g')
+            echo $CLOUDFRONT_DISTRIBUTION_ID
+            aws configure set preview.cloudfront true
+            aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths /\*
+      - *notify-on-fail
+
+  notify-via-slack:
+    executor: slack-executor
+    steps:
+      - run: echo "Slack notification"
+      - slack/notify:
+          event: 'always'
+          channel: 'chatty-app-builds'
+          template: ''
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "✅ 👍 ✅ ${CIRCLE_BRANCH} branch backend deployment is complete. ✅ 👍 ✅",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project*:\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Job*: ${CIRCLE_JOB}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch*:\n$CIRCLE_BRANCH"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*When*:\n$(date +'%m/%d/%Y %T')"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Build*:\n$CIRCLE_BUILD_NUM"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author*:\n$CIRCLE_PROJECT_USERNAME"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job"
+                      },
+                      "url": "${CIRCLE_BUILD_URL}"
+                    }
+                  ]
+                }
+              ]
+            }
+
+  terraform-destroy:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - run:
+          name: Terraform destroy
+          command: |
+            cd infrastructure/
+            terraform init
+            terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
+            terraform destroy -auto-approve
+      - slack/notify:
+          channel: 'chatty-app-builds'
+          event: always
+          template: basic_on_hold_1
+
+
+workflows:
+  build_and_deploy:
+    jobs:
+      - install-dependencies
+      - linting:
+          requires:
+            - install-dependencies
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - code-formatter-check:
+          requires:
+            - linting
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - unit-test:
+          requires:
+            - code-formatter-check
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - build-app:
+          requires:
+            - unit-test
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - terraform-validate:
+          requires:
+            - build-app
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - terraform-plan-and-apply:
+          requires:
+            - terraform-validate
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - upload-build-to-s3:
+          requires:
+            - terraform-plan-and-apply
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - aws-cloudfront-distribution:
+          requires:
+            - upload-build-to-s3
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - notify-via-slack:
+          requires:
+            - aws-cloudfront-distribution
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - hold:
+          type: approval
+          requires:
+            - notify-via-slack
+      - terraform-destroy:
+          requires:
+            - hold
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main

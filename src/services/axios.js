@@ -1,7 +1,8 @@
-import { APP_ENVIRONMENT } from '@root/App';
 import axios from 'axios';
 
 export let BASE_ENDPOINT = '';
+
+export const APP_ENVIRONMENT = 'local';
 
 if (APP_ENVIRONMENT === 'local') {
   BASE_ENDPOINT = 'http://localhost:5000';
@@ -9,7 +10,7 @@ if (APP_ENVIRONMENT === 'local') {
   BASE_ENDPOINT = 'https://api.dev.chatappserver.xyz';
 } else if (APP_ENVIRONMENT === 'staging') {
   BASE_ENDPOINT = 'https://api.stg.chatappserver.xyz';
-} else {
+} else if (APP_ENVIRONMENT === 'production') {
   BASE_ENDPOINT = 'https://api.chatappserver.xyz';
 }
 

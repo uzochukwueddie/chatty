@@ -65,8 +65,11 @@ describe('Streams', () => {
     });
   });
 
-  it('should not have empty posts component', async () => {
+  it('should have empty posts component', async () => {
     server.use(emptyPostsMock);
+    act(() => {
+      store.dispatch(addToPosts([]));
+    });
     render(<Streams />);
     let posts;
     await act(() => {
