@@ -33,7 +33,7 @@
     "lint:fix": "eslint 'src/**/*.js' --fix",
     "prettier:check": "prettier --check 'src/**/*.{js,jsx,json}'",
     "prettier:fix": "prettier --write 'src/**/*.{js,jsx,json}'",
-    "build": "react-app-rewired build",
+    "build": "CI=false react-app-rewired build",
     "test": "react-app-rewired test --coverage --forceExit --detectOpenHandles --watchAll=false"
   },
   "eslintConfig": {
