@@ -12,6 +12,7 @@ executors:
   terraform-executor:
     docker:
       - image: hashicorp/terraform:latest
+      - image: 'cibuilds/base:latest'
   slack-executor:
     docker:
       - image: 'cibuilds/base:latest'
