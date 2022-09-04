@@ -8,6 +8,7 @@ import NotificationSkeleton from '@pages/social/notifications/NotificationSkelet
 import CardSkeleton from '@components/card-element/CardSkeleton';
 import PhotoSkeleton from '@pages/social/photos/PhotoSkeleton';
 import ProfileSkeleton from '@pages/social/profile/ProfileSkeleton';
+import ChatSkeleton from '@pages/social/chat/ChatSkeleton';
 
 const Social = lazy(() => import('@pages/social/Social'));
 const Chat = lazy(() => import('@pages/social/chat/Chat'));
@@ -52,7 +53,7 @@ export const AppRouter = () => {
         {
           path: 'chat/messages',
           element: (
-            <Suspense>
+            <Suspense fallback={<ChatSkeleton />}>
               <Chat />
             </Suspense>
           )

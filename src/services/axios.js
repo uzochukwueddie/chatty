@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export let BASE_ENDPOINT = '';
 
-export const APP_ENVIRONMENT = 'development';
+export const APP_ENVIRONMENT = 'local';
 
 if (APP_ENVIRONMENT === 'local') {
   BASE_ENDPOINT = 'http://localhost:5000';

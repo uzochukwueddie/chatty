@@ -104,8 +104,8 @@ const InfoDisplay = ({
             <div className="side-container-body-icon">
               {type === 'basic' ? <FaGraduationCap className="icon" /> : <FaTwitter className="icon twitter" />}
             </div>
-            <div className="side-container-body-content" data-testid="content-1">
-              {type === 'basic' && editIntroBtn && school && <>Went to</>}
+            <div className="side-container-body-content" data-testid="content-2">
+              {type === 'basic' && editIntroBtn && school && <>Went to </>}
               {type === 'basic' && editIntroBtn && !school && <div className="no-information">{schoolMsg}</div>}
               {type !== 'basic' && editIntroBtn && twitter && (
                 <a className="link" href={twitter} target="_blank" rel="noreferrer noopener">

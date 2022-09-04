@@ -2,7 +2,7 @@ import Skeleton from 'react-loading-skeleton';
 
 const CountContainerSkeleton = () => {
   return (
-    <div className="count-container" data-testid="count-container">
+    <div className="count-container" data-testid="count-container-skeleton">
       <div className="followers-count">
         <span className="count" data-testid="info">
           <Skeleton baseColor="#EFF1F6" width={20} />

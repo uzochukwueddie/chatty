@@ -206,6 +206,7 @@ const Header = () => {
             </div>
             <ul className="header-nav">
               <li
+                data-testid="notification-list-item"
                 className="header-nav-item active-item"
                 onClick={() => {
                   setIsMessageActive(false);
@@ -239,6 +240,7 @@ const Header = () => {
                 &nbsp;
               </li>
               <li
+                data-testid="message-list-item"
                 className="header-nav-item active-item"
                 onClick={() => {
                   setIsMessageActive(true);
@@ -253,6 +255,7 @@ const Header = () => {
                 &nbsp;
               </li>
               <li
+                data-testid="settings-list-item"
                 className="header-nav-item"
                 onClick={() => {
                   setIsSettingsActive(!isSettingsActive);
