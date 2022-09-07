@@ -319,79 +319,79 @@ workflows:
                 - develop
                 - staging
                 - main
-      - code-formatter-check:
-          requires:
-            - linting
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - unit-test:
-          requires:
-            - code-formatter-check
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - terraform-validate:
-          requires:
-            - unit-test
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - terraform-plan-and-apply:
-          requires:
-            - terraform-validate
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - upload-build-to-s3:
-          requires:
-            - terraform-plan-and-apply
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - aws-cloudfront-distribution:
-          requires:
-            - upload-build-to-s3
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - notify-via-slack:
-          requires:
-            - aws-cloudfront-distribution
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
-      - hold:
-          type: approval
-          requires:
-            - notify-via-slack
-      - terraform-destroy:
-          requires:
-            - hold
-          filters:
-            branches:
-              only:
-                - develop
-                - staging
-                - main
+      # - code-formatter-check:
+      #     requires:
+      #       - linting
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - unit-test:
+      #     requires:
+      #       - code-formatter-check
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - terraform-validate:
+      #     requires:
+      #       - unit-test
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - terraform-plan-and-apply:
+      #     requires:
+      #       - terraform-validate
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - upload-build-to-s3:
+      #     requires:
+      #       - terraform-plan-and-apply
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - aws-cloudfront-distribution:
+      #     requires:
+      #       - upload-build-to-s3
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - notify-via-slack:
+      #     requires:
+      #       - aws-cloudfront-distribution
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
+      # - hold:
+      #     type: approval
+      #     requires:
+      #       - notify-via-slack
+      # - terraform-destroy:
+      #     requires:
+      #       - hold
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - main
