@@ -4,9 +4,9 @@ export let BASE_ENDPOINT = '';
 
 export const APP_ENVIRONMENT = 'development';
 
-if (APP_ENVIRONMENT === 'development') {
+if (APP_ENVIRONMENT === 'local') {
   BASE_ENDPOINT = 'http://localhost:5000';
-} else if (APP_ENVIRONMENT === 'developments') {
+} else if (APP_ENVIRONMENT === 'development') {
   BASE_ENDPOINT = 'https://api.dev.<your-backend-domain>';
 } else if (APP_ENVIRONMENT === 'staging') {
   BASE_ENDPOINT = 'https://api.stg.<your-backend-domain>';

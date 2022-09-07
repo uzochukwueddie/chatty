@@ -195,16 +195,20 @@ jobs:
             rm -rf .env
             if [ "${CIRCLE_BRANCH}" == "develop" ]
             then
-              aws --region eu-central-1 s3 sync s3://chattyapp-env-files/frontend/develop .
+              # Make sure to use your correct s3 bucket name
+              aws --region eu-central-1 s3 sync s3://<your-s3-bucket>/frontend/develop .
             elif [ "${CIRCLE_BRANCH}" == "staging" ]
             then
-              aws --region eu-central-1 s3 sync s3://chattyapp-env-files/frontend/staging .
+              # Make sure to use your correct s3 bucket name
+              aws --region eu-central-1 s3 sync s3://<your-s3-bucket>/frontend/staging .
             else
-              aws --region eu-central-1 s3 sync s3://chattyapp-env-files/frontend/production .
+              # Make sure to use your correct s3 bucket name
+              aws --region eu-central-1 s3 sync s3://<your-s3-bucket>/frontend/production .
             fi
             npm run build
             echo "Build successful"
-            aws --region eu-central-1 s3 cp build s3://chatapp-client-${CIRCLE_BRANCH}-app --recursive
+            # For the bucket name here, use the variable prefix inside your variables.tf file
+            aws --region eu-central-1 s3 cp build s3://<variable-prefix>-${CIRCLE_BRANCH}-app --recursive
       - *notify-on-fail
 
   aws-cloudfront-distribution:
@@ -319,79 +323,79 @@ workflows:
                 - develop
                 - staging
                 - main
-      # - code-formatter-check:
-      #     requires:
-      #       - linting
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - staging
-      #           - main
-      # - unit-test:
-      #     requires:
-      #       - code-formatter-check
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - staging
-      #           - main
-      # - terraform-validate:
-      #     requires:
-      #       - unit-test
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - staging
-      #           - main
-      # - terraform-plan-and-apply:
-      #     requires:
-      #       - terraform-validate
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - staging
-      #           - main
-      # - upload-build-to-s3:
-      #     requires:
-      #       - terraform-plan-and-apply
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - staging
-      #           - main
-      # - aws-cloudfront-distribution:
-      #     requires:
-      #       - upload-build-to-s3
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - staging
-      #           - main
-      # - notify-via-slack:
-      #     requires:
-      #       - aws-cloudfront-distribution
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - staging
-      #           - main
-      # - hold:
-      #     type: approval
-      #     requires:
-      #       - notify-via-slack
-      # - terraform-destroy:
-      #     requires:
-      #       - hold
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - staging
-      #           - main
+      - code-formatter-check:
+          requires:
+            - linting
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - unit-test:
+          requires:
+            - code-formatter-check
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - terraform-validate:
+          requires:
+            - unit-test
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - terraform-plan-and-apply:
+          requires:
+            - terraform-validate
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - upload-build-to-s3:
+          requires:
+            - terraform-plan-and-apply
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - aws-cloudfront-distribution:
+          requires:
+            - upload-build-to-s3
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - notify-via-slack:
+          requires:
+            - aws-cloudfront-distribution
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
+      - hold:
+          type: approval
+          requires:
+            - notify-via-slack
+      - terraform-destroy:
+          requires:
+            - hold
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - main
