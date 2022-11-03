@@ -15,11 +15,12 @@ import { ImageUtils } from '@services/utils/image-utils.service';
 import { postService } from '@services/api/post/post.service';
 import Spinner from '@components/spinner/Spinner';
 
-const AddPost = ({ selectedImage }) => {
+const AddPost = ({ selectedImage, selectedPostVideo }) => {
   const { gifModalIsOpen, feeling } = useSelector((state) => state.modal);
-  const { gifUrl, image, privacy } = useSelector((state) => state.post);
+  const { gifUrl, image, privacy, video } = useSelector((state) => state.post);
   const { profile } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
+  const [hasVideo, setHasVideo] = useState(false);
   const [postImage, setPostImage] = useState('');
   const [allowedNumberOfCharacters] = useState('100/100');
   const [textAreaBackground, setTextAreaBackground] = useState('#ffffff');
@@ -30,11 +31,13 @@ const AddPost = ({ selectedImage }) => {
     feelings: '',
     gifUrl: '',
     profilePicture: '',
-    image: ''
+    image: '',
+    video: ''
   });
   const [disable, setDisable] = useState(true);
   const [apiResponse, setApiResponse] = useState('');
   const [selectedPostImage, setSelectedPostImage] = useState();
+  const [selectedVideo, setSelectedVideo] = useState();
   const counterRef = useRef(null);
   const inputRef = useRef(null);
   const imageInputRef = useRef(null);
@@ -66,6 +69,7 @@ const AddPost = ({ selectedImage }) => {
   };
 
   const clearImage = () => {
+    setSelectedVideo(null);
     PostUtils.clearImage(postData, '', inputRef, dispatch, setSelectedPostImage, setPostImage, setPostData);
   };
 
@@ -79,17 +83,33 @@ const AddPost = ({ selectedImage }) => {
       postData.privacy = privacy || 'Public';
       postData.gifUrl = gifUrl;
       postData.profilePicture = profile?.profilePicture;
-      if (selectedPostImage || selectedImage) {
+      if (selectedPostImage || selectedVideo || selectedImage || selectedPostVideo) {
         let result = '';
         if (selectedPostImage) {
           result = await ImageUtils.readAsBase64(selectedPostImage);
         }
 
+        if (selectedVideo) {
+          result = await ImageUtils.readAsBase64(selectedVideo);
+        }
+
         if (selectedImage) {
           result = await ImageUtils.readAsBase64(selectedImage);
         }
-        const response = await PostUtils.sendPostWithImageRequest(
-          result,
+
+        if (selectedPostVideo) {
+          result = await ImageUtils.readAsBase64(selectedPostVideo);
+        }
+        const type = selectedPostImage || selectedImage ? 'image' : 'video';
+        if (type === 'image') {
+          postData.image = result;
+          postData.video = '';
+        } else {
+          postData.video = result;
+          postData.image = '';
+        }
+        const response = await PostUtils.sendPostWithFileRequest(
+          type,
           postData,
           imageInputRef,
           setApiResponse,
@@ -98,6 +118,7 @@ const AddPost = ({ selectedImage }) => {
           dispatch
         );
         if (response && response?.data?.message) {
+          setHasVideo(false);
           PostUtils.closePostModal(dispatch);
         }
       } else {
@@ -105,10 +126,12 @@ const AddPost = ({ selectedImage }) => {
         if (response) {
           setApiResponse('success');
           setLoading(false);
+          setHasVideo(false);
           PostUtils.closePostModal(dispatch);
         }
       }
     } catch (error) {
+      setHasVideo(false);
       PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, dispatch);
     }
   };
@@ -127,12 +150,18 @@ const AddPost = ({ selectedImage }) => {
   useEffect(() => {
     if (gifUrl) {
       setPostImage(gifUrl);
+      setHasVideo(false);
       PostUtils.postInputData(imageInputRef, postData, '', setPostData);
     } else if (image) {
       setPostImage(image);
+      setHasVideo(false);
+      PostUtils.postInputData(imageInputRef, postData, '', setPostData);
+    } else if (video) {
+      setHasVideo(true);
+      setPostImage(video);
       PostUtils.postInputData(imageInputRef, postData, '', setPostData);
     }
-  }, [gifUrl, image, postData]);
+  }, [gifUrl, image, postData, video]);
 
   return (
     <>
@@ -142,7 +171,10 @@ const AddPost = ({ selectedImage }) => {
           <div
             className="modal-box"
             style={{
-              height: selectedPostImage || gifUrl || image || postData?.gifUrl || postData?.image ? '700px' : 'auto'
+              height:
+                selectedPostImage || hasVideo || gifUrl || image || postData?.gifUrl || postData?.image
+                  ? '700px'
+                  : 'auto'
             }}
           >
             {loading && (
@@ -209,10 +241,20 @@ const AddPost = ({ selectedImage }) => {
                     data-placeholder="What's on your mind?..."
                   ></div>
                   <div className="image-display">
-                    <div className="image-delete-btn" data-testid="image-delete-btn" onClick={() => clearImage()}>
+                    <div
+                      className="image-delete-btn"
+                      data-testid="image-delete-btn"
+                      style={{ marginTop: `${hasVideo ? '-40px' : ''}` }}
+                      onClick={() => clearImage()}
+                    >
                       <FaTimes />
                     </div>
-                    <img data-testid="post-image" className="post-image" src={`${postImage}`} alt="" />
+                    {!hasVideo && <img data-testid="post-image" className="post-image" src={`${postImage}`} alt="" />}
+                    {hasVideo && (
+                      <div style={{ marginTop: '-40px' }}>
+                        <video width="100%" controls src={`${video}`} />
+                      </div>
+                    )}
                   </div>
                 </div>
               </>
@@ -238,7 +280,7 @@ const AddPost = ({ selectedImage }) => {
               {allowedNumberOfCharacters}
             </span>
 
-            <ModalBoxSelection setSelectedPostImage={setSelectedPostImage} />
+            <ModalBoxSelection setSelectedPostImage={setSelectedPostImage} setSelectedVideo={setSelectedVideo} />
 
             <div className="modal-box-button" data-testid="post-button">
               <Button label="Create Post" className="post-button" disabled={disable} handleClick={createPost} />
@@ -265,6 +307,7 @@ const AddPost = ({ selectedImage }) => {
   );
 };
 AddPost.propTypes = {
-  selectedImage: PropTypes.string
+  selectedImage: PropTypes.any,
+  selectedPostVideo: PropTypes.any
 };
 export default AddPost;

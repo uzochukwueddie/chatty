@@ -16,8 +16,18 @@ class PostService {
     return response;
   }
 
+  async createPostWithVideo(body) {
+    const response = await axios.post('/post/video/post', body);
+    return response;
+  }
+
   async updatePostWithImage(postId, body) {
     const response = await axios.put(`/post/image/${postId}`, body);
+    return response;
+  }
+
+  async updatePostWithVideo(postId, body) {
+    const response = await axios.put(`/post/video/${postId}`, body);
     return response;
   }
 
@@ -53,6 +63,11 @@ class PostService {
 
   async getPostsWithImages(page) {
     const response = await axios.get(`/post/images/${page}`);
+    return response;
+  }
+
+  async getPostsWithVideos(page) {
+    const response = await axios.get(`/post/videos/${page}`);
     return response;
   }
 
