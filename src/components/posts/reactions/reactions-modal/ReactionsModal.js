@@ -72,7 +72,7 @@ const ReactionsModal = () => {
                 style={{ color: `${reaction.type === reactionType ? reactionColor : ''}` }}
                 onClick={() => reactionList(reaction?.type)}
               >
-                <img src={`${reactionsMap[reaction?.type]}`} atl="" />
+                <img src={`${reactionsMap[reaction?.type]}`} alt="" />
                 <span>{Utils.shortenLargeNumbers(reaction?.value)}</span>
               </li>
             ))}
